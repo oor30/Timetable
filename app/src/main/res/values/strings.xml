@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Timetable</string>
+    <string name="textMon">月</string>
+    <string name="textTue">火</string>
+    <string name="textWed">水</string>
+    <string name="textThu">木</string>
+    <string name="textFri">金</string>
+</resources>
