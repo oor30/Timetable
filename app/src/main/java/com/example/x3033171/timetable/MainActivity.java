@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -23,22 +22,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         db = FirebaseFirestore.getInstance();
-
-//        searchLecture("semester", "前学期");
-
-        db.collectionGroup("timeroom").whereEqualTo("semester", "前学期").get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        for (QueryDocumentSnapshot snap : queryDocumentSnapshots) {
-                            Log.d("TAG", snap.getId() + " => " + snap.getData());
-                        }
-                    }
-                });
+        searchLecture(db, "timeinfo.0.semester", "前学期");
 
     }
 
-    void searchLecture (String field, String value) {
+    void searchLecture (FirebaseFirestore db, String field, String value) {
         db.collection("lectures")
                 .whereEqualTo(field, value)
                 .get()
