@@ -11,7 +11,7 @@
         android:id="@+id/lecName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="講義名"
+        android:gravity="center"
         app:layout_constraintBottom_toTopOf="@+id/lecRoom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,7 +21,6 @@
         android:id="@+id/lecRoom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="教室"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

@@ -39,4 +39,20 @@ public class Lecture extends ConstraintLayout implements View.OnClickListener {
 
         }
     }
+
+    public String getLecName() {
+        return lecName.getText().toString();
+    }
+
+    public String getLecRoom() {
+        return lecRoom.toString();
+    }
+
+    public void setLecName(String str) {
+        lecName.setText(str);
+    }
+
+    public void setLecRoom(String str) {
+        lecRoom.setText(str);
+    }
 }
