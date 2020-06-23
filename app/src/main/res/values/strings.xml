@@ -5,4 +5,50 @@
     <string name="textWed">水</string>
     <string name="textThu">木</string>
     <string name="textFri">金</string>
+
+    <string-array name="faculty">
+        <item>学部</item>
+        <item>工学部</item>
+    </string-array>
+
+    <string-array name="department">
+        <item>学科</item>
+        <item>機械工学科</item>
+        <item>電気電子・情報工学科</item>
+        <item>社会基盤工学科</item>
+        <item>化学・生命工学科</item>
+    </string-array>
+
+    <string-array name="cource_2">
+        <item>コース</item>
+        <item>電気電子コース</item>
+        <item>情報コース</item>
+        <item>応用物理コース</item>
+    </string-array>
+
+    <string-array name="grade">
+        <item>学年</item>
+        <item>1年生</item>
+        <item>2年生</item>
+        <item>3年生</item>
+        <item>4年生</item>
+    </string-array>
+
+    <string-array name="week">
+        <item>曜日</item>
+        <item>月曜日</item>
+        <item>火曜日</item>
+        <item>水曜日</item>
+        <item>木曜日</item>
+        <item>金曜日</item>
+    </string-array>
+
+    <string-array name="period">
+        <item>時限</item>
+        <item>１時限</item>
+        <item>２時限</item>
+        <item>３時限</item>
+        <item>４時限</item>
+        <item>５時限</item>
+    </string-array>
 </resources>

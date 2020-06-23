@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SearchLecture">
+
+    <EditText
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="講義名"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toStartOf="@+id/btSearch"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btSearch"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="検索"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/belongs"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:gravity="center_vertical"
+        android:text="学部"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/spnFaculty"
+        app:layout_constraintStart_toStartOf="@+id/spnFaculty"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <Spinner
+        android:id="@+id/spnFaculty"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:entries="@array/faculty"
+        android:spinnerMode="dialog"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <Spinner
+        android:id="@+id/spnDepartment"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:entries="@array/department"
+        android:spinnerMode="dialog"
+        android:visibility="invisible"
+        app:layout_constraintStart_toEndOf="@+id/spnFaculty"
+        app:layout_constraintTop_toTopOf="@+id/spnFaculty" />
+
+    <Spinner
+        android:id="@+id/spnCourse"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:entries="@array/cource_2"
+        android:spinnerMode="dialog"
+        android:visibility="invisible"
+        app:layout_constraintStart_toEndOf="@+id/spnDepartment"
+        app:layout_constraintTop_toTopOf="@+id/spnFaculty" />
+
+    <Spinner
+        android:id="@+id/spnGrade"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:entries="@array/grade"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spnFaculty" />
+
+    <Spinner
+        android:id="@+id/spnWeek"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:entries="@array/week"
+        app:layout_constraintStart_toEndOf="@+id/spnGrade"
+        app:layout_constraintTop_toTopOf="@+id/spnGrade" />
+
+    <Spinner
+        android:id="@+id/spnPeriod"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:entries="@array/period"
+        app:layout_constraintStart_toEndOf="@+id/spnWeek"
+        app:layout_constraintTop_toTopOf="@+id/spnWeek" />
+
+    <Button
+        android:id="@+id/btFinish"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="60dp"
+        android:layout_height="40dp"
+        android:text="完了"
+        app:layout_constraintBottom_toBottomOf="@+id/spnPeriod"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/scrollView2"
+        app:layout_constraintStart_toStartOf="@+id/scrollView2"
+        app:layout_constraintTop_toTopOf="@+id/scrollView2" />
+
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spnWeek">
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
