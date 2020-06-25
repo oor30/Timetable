@@ -1,24 +1,32 @@
 package com.example.x3033171.timetable;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+
+import com.google.android.material.navigation.NavigationView;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     Database database;
     Lecture[][] lectures;
+    LecInfoView lecInfoView;
+    NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,15 +60,34 @@ public class MainActivity extends AppCompatActivity {
         lectures[4][3] = findViewById(R.id.lec54);
         lectures[4][4] = findViewById(R.id.lec55);
 
+        for (Lecture[] lectures_ : lectures) {
+            for (Lecture lecture : lectures_) {
+                lecture.setOnClickListener(lectureOnClick);
+            }
+        }
+
+        lecInfoView = findViewById(R.id.lecInfoView);
+        lecInfoView.setContent(this);
+        lecInfoView.setVisibility(View.GONE);
+        lecInfoView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                v.performClick();
+                return true;
+            }
+        });
+
         database = new Database(lectures);
-        Intent intent = new Intent(getApplication(), SearchLecture.class);
-        startActivity(intent);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d("resume", "onResume()");
+
+        navigationView = findViewById(R.id.navigationView);
+        navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setCheckedItem(R.id.home);
+
         try {
             FileInputStream fis = openFileInput("lecCode.txt");
             BufferedReader reader = new BufferedReader(new InputStreamReader(fis, StandardCharsets.UTF_8));
@@ -68,11 +95,37 @@ public class MainActivity extends AppCompatActivity {
             while ((line = reader.readLine()) != null) {
                 Map<String, String> map = new HashMap<>();
                 map.put("履修コード", line);
-                Log.d("lecCode", line);
                 database.searchLecture(map, 0);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.editLectures:
+                DrawerLayout drawerLayout = findViewById(R.id.drawerLayout);
+                drawerLayout.closeDrawers();
+                Intent intent = new Intent(this, SearchLecture.class);
+                startActivity(intent);
+                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                return true;
+        }
+        return false;
+    }
+
+    private View.OnClickListener lectureOnClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (!((Lecture)v).isEmpty()) {
+                lecInfoView.setLecture((Lecture)v);
+//                lecInfoView.setting(((Lecture)v).getLecCode());
+                lecInfoView.setVisibility(View.VISIBLE);
+                lecInfoView.setAlpha(0f);
+                lecInfoView.animate().alpha(1f).setDuration(200).setListener(null);
+            }
+        }
+    };
 }

@@ -1,20 +1,26 @@
 package com.example.x3033171.timetable;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -32,12 +38,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class SearchLecture extends AppCompatActivity {
+public class SearchLecture extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     LinearLayout resultsLayout;
+    DrawerLayout drawerLayout;
+    NavigationView navigationView;
     TextView textView, belongs;
     Button btSearch, btFinish;
     Spinner spnFaculty, spnDepartment, spnCourse, spnGrade, spnWeek, spnPeriod;
+    CheckBox selectedCB;
     ProgressBar progressBar;
 
     int grade, week, period;
@@ -51,11 +60,16 @@ public class SearchLecture extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_lecture);
 
+        drawerLayout = findViewById(R.id.drawerLayout2);
+        navigationView = findViewById(R.id.navigationView2);
+        navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setCheckedItem(R.id.editLectures);
+
         grade = week = period = 0;
         name = "";
         resultArray = new ArrayList<>();
 
-        resultsLayout = (LinearLayout) findViewById(R.id.linearLayout);
+        resultsLayout = findViewById(R.id.linearLayout);
         textView = findViewById(R.id.textView);
         textView.setOnKeyListener(onKeyListener);
         belongs = findViewById(R.id.belongs);
@@ -80,6 +94,9 @@ public class SearchLecture extends AppCompatActivity {
         spnGrade.setOnItemSelectedListener(onItemSelectedListener);
         spnWeek.setOnItemSelectedListener(onItemSelectedListener);
         spnPeriod.setOnItemSelectedListener(onItemSelectedListener);
+
+        selectedCB = findViewById(R.id.selectedCB);
+        selectedCB.setOnClickListener(checkBoxListener);
 
         progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);
@@ -129,6 +146,11 @@ public class SearchLecture extends AppCompatActivity {
             }
         });
         for (Result result : resultArray) {
+            if (selectedCB.isChecked()) {
+                if (!result.getChecked()) {
+                    continue;
+                }
+            }
             if (!name.isEmpty()) {
                 if (!result.getName().contains(name)) {
                     continue;
@@ -183,10 +205,21 @@ public class SearchLecture extends AppCompatActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                finish();
+//                finish();
+                Intent intent = new Intent(getApplication(), MainActivity.class);
+                startActivity(intent);
             }
             else if (v.getId() == R.id.belongs) {
                 spnFaculty.performClick();
+            }
+        }
+    };
+
+    private View.OnClickListener checkBoxListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (v.getId() == R.id.selectedCB) {
+                onClickListener.onClick(btSearch);
             }
         }
     };
@@ -204,34 +237,34 @@ public class SearchLecture extends AppCompatActivity {
     private AdapterView.OnItemSelectedListener onItemSelectedListener = new AdapterView.OnItemSelectedListener() {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            if ((Spinner)parent == spnFaculty) {
+            if (parent == spnFaculty) {
                 faculty = spnFaculty.getSelectedItem().toString();
                 if (position > 0) {
                     spnDepartment.performClick();
                 }
                 belongs.setText(String.format("%s", faculty));
             }
-            else if ((Spinner)parent == spnDepartment) {
+            else if (parent == spnDepartment) {
                 department = spnDepartment.getSelectedItem().toString();
                 if (position > 0) {
                     spnCourse.performClick();
                     belongs.setText(String.format("%s/%s", faculty, department));
                 }
             }
-            else if ((Spinner)parent == spnCourse) {
+            else if (parent == spnCourse) {
                 course = spnCourse.getSelectedItem().toString();
                 onClickListener.onClick(btSearch);
                 belongs.setText(String.format("%s/%s/%s", faculty, department, course));
             }
-            else if ((Spinner)parent == spnGrade) {
+            else if (parent == spnGrade) {
                 grade = position;
                 onClickListener.onClick(btSearch);
             }
-            else if ((Spinner)parent == spnWeek) {
+            else if (parent == spnWeek) {
                 week = position;
                 onClickListener.onClick(btSearch);
             }
-            else if ((Spinner)parent == spnPeriod) {
+            else if (parent == spnPeriod) {
                 period = position;
                 onClickListener.onClick(btSearch);
             }
@@ -243,4 +276,17 @@ public class SearchLecture extends AppCompatActivity {
 
         }
     };
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.home) {
+            drawerLayout.closeDrawers();
+            Intent intent = new Intent(getApplication(), MainActivity.class);
+            startActivity(intent);
+        }
+        else if (item.getItemId() == R.id.editLectures) {
+            drawerLayout.closeDrawers();
+        }
+        return true;
+    }
 }

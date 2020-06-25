@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="150dp"
+    android:background="@color/colorAccent"
+    android:theme="@style/ThemeOverlay.AppCompat.Light">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:padding="16dp"
+        android:text="岐阜大学 時間割"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp" />
+</RelativeLayout>

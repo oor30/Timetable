@@ -23,6 +23,7 @@ public class Database {
     FirebaseFirestore db;
     Lecture[][] lectures;
     SearchLecture sl;
+    LecInfoView liv;
 
     Database(Lecture[][] l) {
         lectures = l;
@@ -38,6 +39,11 @@ public class Database {
     Database(SearchLecture sl) {
         db = FirebaseFirestore.getInstance();
         this.sl = sl;
+    }
+
+    Database(LecInfoView liv) {
+        db = FirebaseFirestore.getInstance();
+        this.liv = liv;
     }
 
     public void searchLecture(Map<String, String> map, int mode) {
@@ -80,6 +86,8 @@ public class Database {
                         logData(task);
                     } else if (mode == 1) {
                         sl.makeResults(task);
+                    } else if (mode == 2) {
+                        liv.writeInfo(task);
                     }
                 } else {
                     Log.w("TAG", "Error getting documents.", task.getException());
@@ -91,6 +99,7 @@ public class Database {
     private void logData(Task<QuerySnapshot> task) {
         for (QueryDocumentSnapshot document : task.getResult()) {
             String name = document.getData().get("授業科目名").toString();
+            String lecCode = document.getData().get("履修コード").toString();
             String timeinfo = document.getData().get("timeinfo").toString();
             int inMap = 0;
             ArrayList<String> timeinfoArrayStr = new ArrayList<>();
@@ -125,7 +134,7 @@ public class Database {
             ArrayList<Map<String, Object>> convertedTimeinfoArray = convertBin(timeinfoArray);
             Log.d("情報コース", name + convertedTimeinfoArray);
 
-            setLecture(convertedTimeinfoArray, name);
+            setLecture(convertedTimeinfoArray, name, lecCode, document);
         }
     }
 
@@ -161,7 +170,7 @@ public class Database {
         return convertedArray;
     }
 
-    private void setLecture(ArrayList<Map<String, Object>> array, String name) {
+    private void setLecture(ArrayList<Map<String, Object>> array, String name, String lecCode, QueryDocumentSnapshot document) {
         for (Map<String, Object> map : array) {
             int period = Integer.parseInt(String.valueOf(map.get("period")));
             int week = Integer.parseInt(String.valueOf(map.get("week")));
@@ -169,7 +178,9 @@ public class Database {
             room = Normalizer.normalize(room, Normalizer.Form.NFKC);
             Lecture lec = lectures[week-1][period-1];
             lec.setLecName(cutParenthesis(name));
+            lec.setLecCode(lecCode);
             lec.setLecRoom(room);
+            lec.setDocument(document);
         }
     }
 
