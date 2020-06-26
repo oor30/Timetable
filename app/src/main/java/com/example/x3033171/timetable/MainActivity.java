@@ -5,25 +5,22 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
+import java.lang.reflect.Type;
 import java.util.Map;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    Database database;
     Lecture[][] lectures;
     LecInfoView lecInfoView;
     NavigationView navigationView;
@@ -33,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // 講義情報を保存・表示するView "Lecture"
         lectures = new Lecture[5][5];
         lectures[0][0] = findViewById(R.id.lec11);
         lectures[0][1] = findViewById(R.id.lec12);
@@ -60,15 +58,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         lectures[4][3] = findViewById(R.id.lec54);
         lectures[4][4] = findViewById(R.id.lec55);
 
+        // すべてのLectureにOnClickListenerを登録
         for (Lecture[] lectures_ : lectures) {
             for (Lecture lecture : lectures_) {
                 lecture.setOnClickListener(lectureOnClick);
             }
         }
 
+        // 講義の詳細を前面に表示するView "LecInfoView"
         lecInfoView = findViewById(R.id.lecInfoView);
         lecInfoView.setContent(this);
         lecInfoView.setVisibility(View.GONE);
+        // 背面のコンポーネントがタッチされても反応させないため、リスナーを登録しtrueを返す
         lecInfoView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -76,8 +77,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return true;
             }
         });
-
-        database = new Database(lectures);
     }
 
     @Override
@@ -86,19 +85,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         navigationView = findViewById(R.id.navigationView);
         navigationView.setNavigationItemSelectedListener(this);
-        navigationView.setCheckedItem(R.id.home);
+        navigationView.setCheckedItem(R.id.home);   // メニューの時間割を選択済みに
 
-        try {
-            FileInputStream fis = openFileInput("lecCode.txt");
-            BufferedReader reader = new BufferedReader(new InputStreamReader(fis, StandardCharsets.UTF_8));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                Map<String, String> map = new HashMap<>();
-                map.put("履修コード", line);
-                database.searchLecture(map, 0);
+        // 時間割を設定
+        SharedPreferences preferences = getSharedPreferences("pref", MODE_PRIVATE);
+        Gson gson = new Gson();
+        Set<String> lecCodes = preferences.getStringSet("lecCodes", null);  // 登録済みの講義の履修コードを取得
+
+        if (lecCodes != null) {
+            for (String lecCode : lecCodes) {
+                Type type = new TypeToken<Map<String, Object>>() {}.getType();
+                Map<String, Object> resultMap = gson.fromJson(preferences.getString(lecCode, ""), type);    // 講義情報を取得
+                setLecture(resultMap);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        }
+    }
+
+    private void setLecture(Map<String, Object> resultMap) {
+        Map<String, Object> timeinfo = (Map<String, Object>) resultMap.get("timeinfo");
+        for (Map.Entry<String, Object> entry : timeinfo.entrySet()) {
+            Map<String, Object> map = (Map<String, Object>) entry.getValue();
+            int week = Integer.parseInt(map.get("week").toString());
+            int period = Integer.parseInt(map.get("period").toString());
+            lectures[week-1][period-1].setLecInfo(resultMap);
         }
     }
 
@@ -121,7 +130,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         public void onClick(View v) {
             if (!((Lecture)v).isEmpty()) {
                 lecInfoView.setLecture((Lecture)v);
-//                lecInfoView.setting(((Lecture)v).getLecCode());
                 lecInfoView.setVisibility(View.VISIBLE);
                 lecInfoView.setAlpha(0f);
                 lecInfoView.animate().alpha(1f).setDuration(200).setListener(null);

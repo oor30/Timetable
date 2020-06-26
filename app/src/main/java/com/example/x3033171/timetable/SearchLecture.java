@@ -6,6 +6,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -23,20 +24,17 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.gson.Gson;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 public class SearchLecture extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -104,24 +102,16 @@ public class SearchLecture extends AppCompatActivity implements NavigationView.O
         inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
         Map<String, String> map = new HashMap<>();
         database = new Database(this);
-        database.searchLecture(map, 1);
+        database.searchLecture(map);
     }
 
     public void makeResults(Task<QuerySnapshot> task) {
-        ArrayList<String> lecCodes = new ArrayList<>();
-        try {
-            FileInputStream fis = openFileInput("lecCode.txt");
-            BufferedReader reader = new BufferedReader(new InputStreamReader(fis, StandardCharsets.UTF_8));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                lecCodes.add(line);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        SharedPreferences preferences = getSharedPreferences("pref", MODE_PRIVATE);
+        Set<String> lecCodes = preferences.getStringSet("lecCodes", null);
+
         for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
             Result result = new Result(this, document);
-            if (lecCodes.contains(result.getLecCode())) {
+            if (lecCodes!=null && lecCodes.contains(result.getLecCode())) {
                 result.setChecked(true);
             }
             resultArray.add(result);
@@ -193,21 +183,22 @@ public class SearchLecture extends AppCompatActivity implements NavigationView.O
                 inputMethodManager.hideSoftInputFromWindow(textView.getWindowToken(), InputMethodManager.RESULT_UNCHANGED_SHOWN);
             }
             else if (v.getId() == R.id.btFinish) {
-                StringBuilder lecCode = new StringBuilder();
+                SharedPreferences preferences = getSharedPreferences("pref", MODE_PRIVATE);
+                preferences.edit().clear().apply();
+                Gson gson = new Gson();
+                HashSet<String> recCodes = new HashSet<>();
                 for (Result result : resultArray) {
                     if (result.getChecked()) {
-                        lecCode.append(result.getLecCode()).append("\n");
+                        Map<String, Object> resultMap = result.getResultMap();
+                        preferences.edit().putString(result.getLecCode(), gson.toJson(resultMap)).apply();
+
+                        recCodes.add(result.getLecCode());
                     }
                 }
-                try {
-                    FileOutputStream fos = openFileOutput("lecCode.txt", Context.MODE_PRIVATE);
-                    fos.write(lecCode.toString().getBytes());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-//                finish();
-                Intent intent = new Intent(getApplication(), MainActivity.class);
-                startActivity(intent);
+                preferences.edit().putStringSet("lecCodes", recCodes).apply();
+                finish();
+//                Intent intent = new Intent(getApplication(), MainActivity.class);
+//                startActivity(intent);
             }
             else if (v.getId() == R.id.belongs) {
                 spnFaculty.performClick();

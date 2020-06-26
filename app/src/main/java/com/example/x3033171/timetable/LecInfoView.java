@@ -12,13 +12,6 @@ import android.widget.ViewFlipper;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-
-import java.util.HashMap;
-import java.util.Map;
-
 public class LecInfoView extends ConstraintLayout {
 
     TextView lecName, teacher, room, text, grade;
@@ -70,23 +63,6 @@ public class LecInfoView extends ConstraintLayout {
     @Override
     public boolean performClick() {
         return super.performClick();
-    }
-
-    public void setting(String lecCode) {
-        Map<String, String> map = new HashMap<>();
-        map.put("履修コード", lecCode);
-
-        Database database = new Database(this);
-        database.searchLecture(map, 2);
-    }
-
-    public void writeInfo(Task<QuerySnapshot> task) {
-        for (QueryDocumentSnapshot document : task.getResult()) {
-            String n = document.getData().get("授業科目名").toString();
-            String t = document.getData().get("担当教員").toString();
-            lecName.setText(n);
-            teacher.setText(t);
-        }
     }
 
     public void setLecture(Lecture lecture) {

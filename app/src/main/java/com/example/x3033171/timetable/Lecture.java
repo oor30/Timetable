@@ -8,13 +8,13 @@ import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import com.google.firebase.firestore.QueryDocumentSnapshot;
+import java.util.Map;
 
 public class Lecture extends ConstraintLayout implements View.OnClickListener {
     TextView lecName, lecRoom;
     String lecCode, grade, teacher;
-    QueryDocumentSnapshot document;
     boolean isEmpty;
+    Map<String, Object> resultMap;
 
     public Lecture(Context context) {
         super(context);
@@ -54,10 +54,6 @@ public class Lecture extends ConstraintLayout implements View.OnClickListener {
         return teacher;
     }
 
-    public String getLecCode() {
-        return lecCode;
-    }
-
     public String getLecRoom() {
         return lecRoom.getText().toString();
     }
@@ -66,25 +62,19 @@ public class Lecture extends ConstraintLayout implements View.OnClickListener {
         return grade;
     }
 
-    public void setLecName(String str) {
-        lecName.setText(str);
-    }
-
-    public void setLecCode(String str) {
-        lecCode = str;
-    }
-
-    public void setLecRoom(String str) {
-        lecRoom.setText(str);
-    }
-
-    public void setDocument(QueryDocumentSnapshot document) {
-        grade = document.getData().get("対象学年").toString();
-        teacher = document.getData().get("担当教員").toString();
-        isEmpty = false;
-    }
-
     public boolean isEmpty() {
         return isEmpty;
+    }
+
+    public void setLecInfo(Map<String, Object> resultMap) {
+        this.resultMap = resultMap;
+        lecName.setText(resultMap.get("授業科目名").toString().split("（")[0]);
+        lecCode = resultMap.get("履修コード").toString();
+        Map<String, Object> timeinfo = (Map<String, Object>) resultMap.get("timeinfo");
+        Map<String, Object> timeinfo0 = (Map<String, Object>) timeinfo.get("0");
+        lecRoom.setText(timeinfo0.get("room").toString());
+        grade = resultMap.get("対象学年").toString();
+        teacher = resultMap.get("担当教員").toString();
+        isEmpty = false;
     }
 }
