@@ -12,6 +12,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +26,9 @@ public class Database {
     }
 
     public void searchLecture(Map<String, String> map) {
+        if (map == null) {
+            map = new HashMap<>();
+        }
         CollectionReference cr = db.collection("lectures");
         Query query = cr;
         int cnt = 0;

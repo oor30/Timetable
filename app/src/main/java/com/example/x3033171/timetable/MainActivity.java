@@ -2,15 +2,24 @@ package com.example.x3033171.timetable;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 
+import com.google.android.material.behavior.SwipeDismissBehavior;
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -77,6 +86,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return true;
             }
         });
+
+//        final SwipeDismissBehavior behavior = new SwipeDismissBehavior();
+//        behavior.setStartAlphaSwipeDistance(0.1f);
+//        behavior.setEndAlphaSwipeDistance(0.6f);
+//        behavior.setSwipeDirection(SwipeDismissBehavior.SWIPE_DIRECTION_START_TO_END);
+//        behavior.setListener(new SwipeDismissBehavior.OnDismissListener() {
+//            @Override
+//            public void onDismiss(View view) {
+//
+//            }
+//
+//            @Override
+//            public void onDragStateChanged(int state) {
+//                switch (state) {
+//                    case SwipeDismissBehavior.STATE_DRAGGING:
+//                        break;
+//                    case SwipeDismissBehavior.STATE_IDLE:
+//
+//                }
+//            }
+//        });
+//        final CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) lecInfoView.getLayoutParams();
+//        ((CoordinatorLayout.LayoutParams)params).setBehavior(behavior);
     }
 
     @Override
@@ -119,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 drawerLayout.closeDrawers();
                 Intent intent = new Intent(this, SearchLecture.class);
                 startActivity(intent);
-                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+//                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                 return true;
         }
         return false;
@@ -136,4 +168,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
     };
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (lecInfoView.getVisibility() == View.VISIBLE) {
+                hideLecInfoView();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void hideLecInfoView() {
+        ValueAnimator fadeOut = ObjectAnimator.ofFloat(lecInfoView, "alpha", 1f, 0f);
+        fadeOut.setDuration(200);
+        fadeOut.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                lecInfoView.setVisibility(View.INVISIBLE);
+            }
+        });
+        fadeOut.start();
+    }
 }

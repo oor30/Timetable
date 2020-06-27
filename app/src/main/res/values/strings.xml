@@ -5,6 +5,7 @@
     <string name="textWed">水</string>
     <string name="textThu">木</string>
     <string name="textFri">金</string>
+    <string name="search_hint">講義を検索</string>
 
     <string-array name="faculty">
         <item>学部</item>
@@ -13,17 +14,17 @@
 
     <string-array name="department">
         <item>学科</item>
-        <item>機械工学科</item>
-        <item>電気電子・情報工学科</item>
-        <item>社会基盤工学科</item>
-        <item>化学・生命工学科</item>
+        <item>機械</item>
+        <item>電気電子・情報</item>
+        <item>社会基盤</item>
+        <item>化学・生命</item>
     </string-array>
 
     <string-array name="cource_2">
         <item>コース</item>
-        <item>電気電子コース</item>
-        <item>情報コース</item>
-        <item>応用物理コース</item>
+        <item>電気電子</item>
+        <item>情報</item>
+        <item>応用物理</item>
     </string-array>
 
     <string-array name="grade">
