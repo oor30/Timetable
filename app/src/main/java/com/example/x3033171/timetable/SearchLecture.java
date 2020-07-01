@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.app.ListActivity;
@@ -11,6 +12,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
@@ -26,6 +28,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -41,6 +44,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+@CoordinatorLayout.DefaultBehavior(SearchLecture.Behavior.class)
 public class SearchLecture extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     // フィールド変数
     // レイアウト・サイドメニュー
@@ -86,7 +90,6 @@ public class SearchLecture extends AppCompatActivity implements NavigationView.O
         // ツールバー・検索ボックス
         androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.inflateMenu(R.menu.search);
-//        setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_baseline_menu_24);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -355,5 +358,9 @@ public class SearchLecture extends AppCompatActivity implements NavigationView.O
             drawerLayout.closeDrawers();    // サイドメニューを閉じる
         }
         return true;
+    }
+
+    public static class Behavior extends FloatingActionButton.Behavior {
+
     }
 }

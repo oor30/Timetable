@@ -1,6 +1,7 @@
 package com.example.x3033171.timetable;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
@@ -54,6 +55,11 @@ public class Result extends ConstraintLayout {
             @Override
             public void onClick(View v) {
                 checked = checkBox.isChecked();
+                if (checked) {
+                    setBackgroundColor(Color.parseColor("#FFEEEE"));
+                } else {
+                    setBackgroundColor(Color.parseColor("#FFFFFF"));
+                }
             }
         });
     }

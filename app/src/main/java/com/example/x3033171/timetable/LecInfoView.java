@@ -14,8 +14,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 public class LecInfoView extends ConstraintLayout {
 
-    TextView lecName, teacher, room, text, grade;
-    Button button;
+    TextView lecName, teacher, room, text, grade, result;
     ViewFlipper flipper;
     Animation rightIn, leftOut;
     Context context;
@@ -48,8 +47,8 @@ public class LecInfoView extends ConstraintLayout {
 
 
         flipper = findViewById(R.id.viewFlipper);
-        button = findViewById(R.id.button);
-        button.setOnClickListener(new OnClickListener() {
+        result = findViewById(R.id.result);
+        result.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 flipper.setInAnimation(rightIn);

@@ -9,15 +9,18 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TableLayout;
+import android.widget.Toast;
 
 import com.google.android.material.behavior.SwipeDismissBehavior;
 import com.google.android.material.navigation.NavigationView;
@@ -30,6 +33,10 @@ import java.util.Set;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    MainActivity main;
+    DrawerLayout drawerLayout;
+    ConstraintLayout layout;
+    CoordinatorLayout coordinatorLayout;
     Lecture[][] lectures;
     LecInfoView lecInfoView;
     NavigationView navigationView;
@@ -38,6 +45,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        main = this;
+        drawerLayout = findViewById(R.id.drawerLayout);
+        layout = findViewById(R.id.cardView);
+        coordinatorLayout = findViewById(R.id.coordinatorLayout);
+
+        // ツールバー・検索ボックス
+        androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.inflateMenu(R.menu.search);
+        toolbar.setNavigationIcon(R.drawable.ic_baseline_menu_24);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawerLayout.openDrawer(Gravity.LEFT);
+            }
+        });
 
         // 講義情報を保存・表示するView "Lecture"
         lectures = new Lecture[5][5];
@@ -76,39 +99,42 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // 講義の詳細を前面に表示するView "LecInfoView"
         lecInfoView = findViewById(R.id.lecInfoView);
-        lecInfoView.setContent(this);
+        coordinatorLayout.setVisibility(View.GONE);
         lecInfoView.setVisibility(View.GONE);
-        // 背面のコンポーネントがタッチされても反応させないため、リスナーを登録しtrueを返す
-        lecInfoView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                v.performClick();
-                return true;
-            }
-        });
 
-//        final SwipeDismissBehavior behavior = new SwipeDismissBehavior();
-//        behavior.setStartAlphaSwipeDistance(0.1f);
-//        behavior.setEndAlphaSwipeDistance(0.6f);
-//        behavior.setSwipeDirection(SwipeDismissBehavior.SWIPE_DIRECTION_START_TO_END);
-//        behavior.setListener(new SwipeDismissBehavior.OnDismissListener() {
-//            @Override
-//            public void onDismiss(View view) {
-//
-//            }
-//
-//            @Override
-//            public void onDragStateChanged(int state) {
+        final SwipeDismissBehavior behavior = new SwipeDismissBehavior();
+        behavior.setStartAlphaSwipeDistance(0.1f);
+        behavior.setEndAlphaSwipeDistance(0.6f);
+        behavior.setSwipeDirection(SwipeDismissBehavior.SWIPE_DIRECTION_ANY);
+        behavior.setListener(new SwipeDismissBehavior.OnDismissListener() {
+            @Override
+            public void onDismiss(View view) {
+                Toast.makeText(main, "lecInfoView GONE", Toast.LENGTH_SHORT).show();
+                lecInfoView.setVisibility(View.GONE);
+                coordinatorLayout.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onDragStateChanged(int state) {
 //                switch (state) {
 //                    case SwipeDismissBehavior.STATE_DRAGGING:
+//                        // ドラッグ開始時
+//                        Toast.makeText(main, "STATE_DRAGGING", Toast.LENGTH_SHORT).show();
+//                        break;
+//                    case SwipeDismissBehavior.STATE_SETTLING:
+//                        // ドラッグ終了してDismissするかしないか決まった後
+//                        Toast.makeText(main, "STATE_SETTLING", Toast.LENGTH_SHORT).show();
+//                        b = true;
 //                        break;
 //                    case SwipeDismissBehavior.STATE_IDLE:
-//
+//                        // ドラッグが終わって、Viewが移動し終わった後
+//                        Toast.makeText(main, "STATE_IDLE", Toast.LENGTH_SHORT).show();
+//                        break;
 //                }
-//            }
-//        });
-//        final CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) lecInfoView.getLayoutParams();
-//        ((CoordinatorLayout.LayoutParams)params).setBehavior(behavior);
+            }
+        });
+        final ViewGroup.LayoutParams params = lecInfoView.getLayoutParams();
+        ((CoordinatorLayout.LayoutParams)params).setBehavior(behavior);
     }
 
     @Override
@@ -163,8 +189,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (!((Lecture)v).isEmpty()) {
                 lecInfoView.setLecture((Lecture)v);
                 lecInfoView.setVisibility(View.VISIBLE);
-                lecInfoView.setAlpha(0f);
-                lecInfoView.animate().alpha(1f).setDuration(200).setListener(null);
+                coordinatorLayout.setVisibility(View.VISIBLE);
+
+                PropertyValuesHolder transX = PropertyValuesHolder.ofFloat("translationX", 200f, 0f);
+                PropertyValuesHolder alpha = PropertyValuesHolder.ofFloat("alpha", 0f, 1f);
+                ObjectAnimator objectAnimator1 = ObjectAnimator.ofPropertyValuesHolder(lecInfoView, transX, alpha);
+                objectAnimator1.setDuration(300);
+                objectAnimator1.start();
             }
         }
     };
@@ -186,9 +217,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fadeOut.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                lecInfoView.setVisibility(View.INVISIBLE);
+                lecInfoView.setVisibility(View.GONE);
+                coordinatorLayout.setVisibility(View.GONE);
             }
         });
         fadeOut.start();
+        layout.requestFocus();
     }
 }

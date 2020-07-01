@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/constraintLayout"
+    android:id="@+id/cardView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#00000000"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    app:cardBackgroundColor="@android:color/transparent"
+    app:cardElevation="0dp">
 
     <ViewFlipper
         android:id="@+id/viewFlipper"
@@ -16,10 +17,6 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:background="@drawable/rect_form"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         android:elevation="10dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -78,11 +75,11 @@
                     android:layout_height="wrap_content"
                     android:text="対象学年" />
 
-                <Button
-                    android:id="@+id/button"
+                <TextView
+                    android:id="@+id/result"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Button" />
+                    android:text="成績" />
 
             </LinearLayout>
 
@@ -104,5 +101,5 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ViewFlipper>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
 
