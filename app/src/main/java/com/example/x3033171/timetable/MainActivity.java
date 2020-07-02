@@ -25,6 +25,7 @@ import android.widget.TableLayout;
 import android.widget.Toast;
 
 import com.google.android.material.behavior.SwipeDismissBehavior;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -37,7 +38,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     MainActivity main;
     DrawerLayout drawerLayout;
-    ConstraintLayout layout;
     CoordinatorLayout coordinatorLayout;
     Lecture[][] lectures;
     LecInfoView lecInfoView;
@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private int currentPage;
     private HomeFragment homeFragment;
     private ResultFragment resultFragment;
+    BottomSheetBehavior behavior;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         main = this;
         drawerLayout = findViewById(R.id.drawerLayout);
-        layout = findViewById(R.id.cardView);
+//        layout = findViewById(R.id.cardView);
         coordinatorLayout = findViewById(R.id.coordinatorLayout);
 
 //        pager = findViewById(R.id.viewPager);
@@ -115,42 +116,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // 講義の詳細を前面に表示するView "LecInfoView"
         lecInfoView = findViewById(R.id.lecInfoView);
-        coordinatorLayout.setVisibility(View.GONE);
-        lecInfoView.setVisibility(View.GONE);
-
-        final SwipeDismissBehavior behavior = new SwipeDismissBehavior();
-        behavior.setStartAlphaSwipeDistance(0.1f);
-        behavior.setEndAlphaSwipeDistance(0.6f);
-        behavior.setSwipeDirection(SwipeDismissBehavior.SWIPE_DIRECTION_START_TO_END);
-        behavior.setListener(new SwipeDismissBehavior.OnDismissListener() {
-            @Override
-            public void onDismiss(View view) {
-                Toast.makeText(main, "lecInfoView GONE", Toast.LENGTH_SHORT).show();
-                lecInfoView.setVisibility(View.GONE);
-                coordinatorLayout.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onDragStateChanged(int state) {
-//                switch (state) {
-//                    case SwipeDismissBehavior.STATE_DRAGGING:
-//                        // ドラッグ開始時
-//                        Toast.makeText(main, "STATE_DRAGGING", Toast.LENGTH_SHORT).show();
-//                        break;
-//                    case SwipeDismissBehavior.STATE_SETTLING:
-//                        // ドラッグ終了してDismissするかしないか決まった後
-//                        Toast.makeText(main, "STATE_SETTLING", Toast.LENGTH_SHORT).show();
-//                        b = true;
-//                        break;
-//                    case SwipeDismissBehavior.STATE_IDLE:
-//                        // ドラッグが終わって、Viewが移動し終わった後
-//                        Toast.makeText(main, "STATE_IDLE", Toast.LENGTH_SHORT).show();
-//                        break;
-//                }
-            }
-        });
-        final ViewGroup.LayoutParams params = lecInfoView.getLayoutParams();
-//        ((CoordinatorLayout.LayoutParams)params).setBehavior(behavior);
+        lecInfoView.setMain(this);
+        behavior = BottomSheetBehavior.from(lecInfoView);
+        behavior.setState(BottomSheetBehavior.STATE_HIDDEN);
     }
 
     @Override
@@ -193,7 +161,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 drawerLayout.closeDrawers();
                 Intent intent = new Intent(this, SearchLecture.class);
                 startActivity(intent);
-//                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                 return true;
         }
         return false;
@@ -203,17 +170,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         @Override
         public void onClick(View v) {
             if (!((Lecture)v).isEmpty()) {
-                lecInfoView.setMain(main);
-//                homeFragment.setLecture((Lecture)v);
-                lecInfoView.setVisibility(View.VISIBLE);
-                coordinatorLayout.setVisibility(View.VISIBLE);
-
-                PropertyValuesHolder transX = PropertyValuesHolder.ofFloat("translationX", 200f, 0f);
-                PropertyValuesHolder alpha = PropertyValuesHolder.ofFloat("alpha", 0f, 1f);
-                ObjectAnimator objectAnimator1 = ObjectAnimator.ofPropertyValuesHolder(lecInfoView, transX, alpha);
-                objectAnimator1.setDuration(300);
-                objectAnimator1.start();
                 lecInfoView.setLecture((Lecture)v);
+                behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             }
         }
     };
@@ -221,25 +179,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (lecInfoView.getVisibility() == View.VISIBLE) {
-                hideLecInfoView();
+            if (behavior.getState() != BottomSheetBehavior.STATE_HIDDEN) {
+                behavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                 return true;
             }
         }
-        return false;
-    }
-
-    private void hideLecInfoView() {
-        ValueAnimator fadeOut = ObjectAnimator.ofFloat(lecInfoView, "alpha", 1f, 0f);
-        fadeOut.setDuration(200);
-        fadeOut.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                lecInfoView.setVisibility(View.GONE);
-                coordinatorLayout.setVisibility(View.GONE);
-            }
-        });
-        fadeOut.start();
-        layout.requestFocus();
+        return super.onKeyDown(keyCode, event);
     }
 }

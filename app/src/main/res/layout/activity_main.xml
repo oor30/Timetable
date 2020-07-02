@@ -9,294 +9,286 @@
     android:fitsSystemWindows="true"
     android:focusableInTouchMode="true">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cardView"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:focusable="true"
-        android:focusableInTouchMode="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:focusableInTouchMode="true">
 
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/appBarLayout"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_height="match_parent">
 
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:popupTheme="@style/Widget.AppCompat.Light.ActionBar"
-                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+            <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/appBarLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-        </com.google.android.material.appbar.AppBarLayout>
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    app:popupTheme="@style/Widget.AppCompat.Light.ActionBar"
+                    app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-        <TableLayout
-            android:id="@+id/tableLayout"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/appBarLayout">
+            </com.google.android.material.appbar.AppBarLayout>
 
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="0.2">
+            <TableLayout
+                android:id="@+id/tableLayout"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/appBarLayout">
 
-                <TextView
-                    android:id="@+id/mon"
-                    style="@style/textViewStyle"
+                <TableRow
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="@string/textMon" />
+                    android:layout_weight="0.2">
 
-                <TextView
-                    android:id="@+id/tue"
-                    style="@style/textViewStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="@string/textTue" />
+                    <TextView
+                        android:id="@+id/mon"
+                        style="@style/textViewStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/textMon" />
 
-                <TextView
-                    android:id="@+id/wed"
-                    style="@style/textViewStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="@string/textWed" />
+                    <TextView
+                        android:id="@+id/tue"
+                        style="@style/textViewStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/textTue" />
 
-                <TextView
-                    android:id="@+id/thu"
-                    style="@style/textViewStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="@string/textThu" />
+                    <TextView
+                        android:id="@+id/wed"
+                        style="@style/textViewStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/textWed" />
 
-                <TextView
-                    android:id="@+id/fri"
-                    style="@style/textViewStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="@string/textFri" />
-            </TableRow>
+                    <TextView
+                        android:id="@+id/thu"
+                        style="@style/textViewStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/textThu" />
 
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
+                    <TextView
+                        android:id="@+id/fri"
+                        style="@style/textViewStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/textFri" />
+                </TableRow>
 
-                <com.example.x3033171.timetable.Lecture
-                    android:id="@+id/lec11"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
-
-                <com.example.x3033171.timetable.Lecture
-                    android:id="@+id/lec21"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
-
-                <com.example.x3033171.timetable.Lecture
-                    android:id="@+id/lec31"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
-
-                <com.example.x3033171.timetable.Lecture
-                    android:id="@+id/lec41"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
-
-                <com.example.x3033171.timetable.Lecture
-                    android:id="@+id/lec51"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
-
-                <com.example.x3033171.timetable.Lecture
-                    android:id="@+id/lec12"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
-
-                <com.example.x3033171.timetable.Lecture
-                    android:id="@+id/lec22"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
-
-                <com.example.x3033171.timetable.Lecture
-                    android:id="@+id/lec32"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
-
-                <com.example.x3033171.timetable.Lecture
-                    android:id="@+id/lec42"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
-
-                <com.example.x3033171.timetable.Lecture
-                    android:id="@+id/lec52"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
-
-                <com.example.x3033171.timetable.Lecture
-                    android:id="@+id/lec13"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
-
-                <com.example.x3033171.timetable.Lecture
-                    android:id="@+id/lec23"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
-
-                <com.example.x3033171.timetable.Lecture
-                    android:id="@+id/lec33"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
-
-                <com.example.x3033171.timetable.Lecture
-                    android:id="@+id/lec43"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
-
-                <com.example.x3033171.timetable.Lecture
-                    android:id="@+id/lec53"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
-
-                <com.example.x3033171.timetable.Lecture
-                    android:id="@+id/lec14"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
-
-                <com.example.x3033171.timetable.Lecture
-                    android:id="@+id/lec24"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
-
-                <com.example.x3033171.timetable.Lecture
-                    android:id="@+id/lec34"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
-
-                <com.example.x3033171.timetable.Lecture
-                    android:id="@+id/lec44"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
-
-                <com.example.x3033171.timetable.Lecture
-                    android:id="@+id/lec54"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
-
-                <com.example.x3033171.timetable.Lecture
-                    android:id="@+id/lec15"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
-
-                <com.example.x3033171.timetable.Lecture
-                    android:id="@+id/lec25"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
-
-                <com.example.x3033171.timetable.Lecture
-                    android:id="@+id/lec35"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
-
-                <com.example.x3033171.timetable.Lecture
-                    android:id="@+id/lec45"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
-
-                <com.example.x3033171.timetable.Lecture
-                    android:id="@+id/lec55"
+                <TableRow
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1">
 
-                </com.example.x3033171.timetable.Lecture>
-            </TableRow>
-        </TableLayout>
+                    <com.example.x3033171.timetable.Lecture
+                        android:id="@+id/lec11"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
 
-        <androidx.coordinatorlayout.widget.CoordinatorLayout
-            android:id="@+id/coordinatorLayout"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:elevation="5dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/appBarLayout">
+                    <com.example.x3033171.timetable.Lecture
+                        android:id="@+id/lec21"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
 
-            <com.example.x3033171.timetable.LecInfoView
-                android:id="@+id/lecInfoView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+                    <com.example.x3033171.timetable.Lecture
+                        android:id="@+id/lec31"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                    <com.example.x3033171.timetable.Lecture
+                        android:id="@+id/lec41"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
+
+                    <com.example.x3033171.timetable.Lecture
+                        android:id="@+id/lec51"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <com.example.x3033171.timetable.Lecture
+                        android:id="@+id/lec12"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
+
+                    <com.example.x3033171.timetable.Lecture
+                        android:id="@+id/lec22"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
+
+                    <com.example.x3033171.timetable.Lecture
+                        android:id="@+id/lec32"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
+
+                    <com.example.x3033171.timetable.Lecture
+                        android:id="@+id/lec42"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
+
+                    <com.example.x3033171.timetable.Lecture
+                        android:id="@+id/lec52"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <com.example.x3033171.timetable.Lecture
+                        android:id="@+id/lec13"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
+
+                    <com.example.x3033171.timetable.Lecture
+                        android:id="@+id/lec23"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
+
+                    <com.example.x3033171.timetable.Lecture
+                        android:id="@+id/lec33"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
+
+                    <com.example.x3033171.timetable.Lecture
+                        android:id="@+id/lec43"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
+
+                    <com.example.x3033171.timetable.Lecture
+                        android:id="@+id/lec53"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <com.example.x3033171.timetable.Lecture
+                        android:id="@+id/lec14"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
+
+                    <com.example.x3033171.timetable.Lecture
+                        android:id="@+id/lec24"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
+
+                    <com.example.x3033171.timetable.Lecture
+                        android:id="@+id/lec34"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
+
+                    <com.example.x3033171.timetable.Lecture
+                        android:id="@+id/lec44"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
+
+                    <com.example.x3033171.timetable.Lecture
+                        android:id="@+id/lec54"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <com.example.x3033171.timetable.Lecture
+                        android:id="@+id/lec15"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
+
+                    <com.example.x3033171.timetable.Lecture
+                        android:id="@+id/lec25"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
+
+                    <com.example.x3033171.timetable.Lecture
+                        android:id="@+id/lec35"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
+
+                    <com.example.x3033171.timetable.Lecture
+                        android:id="@+id/lec45"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
+
+                    <com.example.x3033171.timetable.Lecture
+                        android:id="@+id/lec55"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+
+                    </com.example.x3033171.timetable.Lecture>
+                </TableRow>
+            </TableLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.example.x3033171.timetable.LecInfoView
+            android:id="@+id/lecInfoView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:behavior_hideable="true"
+            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 
     <com.google.android.material.navigation.NavigationView
