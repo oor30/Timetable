@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -40,6 +42,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     Lecture[][] lectures;
     LecInfoView lecInfoView;
     NavigationView navigationView;
+    private ViewPager pager;
+    private PagerAdapter adapter;
+    private int currentPage;
+    private HomeFragment homeFragment;
+    private ResultFragment resultFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +57,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawerLayout = findViewById(R.id.drawerLayout);
         layout = findViewById(R.id.cardView);
         coordinatorLayout = findViewById(R.id.coordinatorLayout);
+
+//        pager = findViewById(R.id.viewPager);
+//        adapter = new PagerAdapter(getSupportFragmentManager());
+//        pager.setAdapter(adapter);
+//        currentPage = 0;
+//
+//        //instantiateItem()で今のFragmentを取得
+//        homeFragment = (HomeFragment) adapter.instantiateItem(pager, 0);
+//        resultFragment = (ResultFragment) adapter.instantiateItem(pager, 1);
 
         // ツールバー・検索ボックス
         androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.toolbar);
@@ -105,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         final SwipeDismissBehavior behavior = new SwipeDismissBehavior();
         behavior.setStartAlphaSwipeDistance(0.1f);
         behavior.setEndAlphaSwipeDistance(0.6f);
-        behavior.setSwipeDirection(SwipeDismissBehavior.SWIPE_DIRECTION_ANY);
+        behavior.setSwipeDirection(SwipeDismissBehavior.SWIPE_DIRECTION_START_TO_END);
         behavior.setListener(new SwipeDismissBehavior.OnDismissListener() {
             @Override
             public void onDismiss(View view) {
@@ -134,7 +150,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
         final ViewGroup.LayoutParams params = lecInfoView.getLayoutParams();
-        ((CoordinatorLayout.LayoutParams)params).setBehavior(behavior);
+//        ((CoordinatorLayout.LayoutParams)params).setBehavior(behavior);
     }
 
     @Override
@@ -187,7 +203,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         @Override
         public void onClick(View v) {
             if (!((Lecture)v).isEmpty()) {
-                lecInfoView.setLecture((Lecture)v);
+                lecInfoView.setMain(main);
+//                homeFragment.setLecture((Lecture)v);
                 lecInfoView.setVisibility(View.VISIBLE);
                 coordinatorLayout.setVisibility(View.VISIBLE);
 
@@ -196,6 +213,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 ObjectAnimator objectAnimator1 = ObjectAnimator.ofPropertyValuesHolder(lecInfoView, transX, alpha);
                 objectAnimator1.setDuration(300);
                 objectAnimator1.start();
+                lecInfoView.setLecture((Lecture)v);
             }
         }
     };

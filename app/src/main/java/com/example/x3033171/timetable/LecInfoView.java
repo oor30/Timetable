@@ -3,21 +3,24 @@ package com.example.x3033171.timetable;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.ViewFlipper;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.viewpager.widget.ViewPager;
 
 public class LecInfoView extends ConstraintLayout {
 
+    MainActivity main;
     TextView lecName, teacher, room, text, grade, result;
-    ViewFlipper flipper;
     Animation rightIn, leftOut;
-    Context context;
+    private ViewPager pager;
+    private PagerAdapter adapter;
+    private int currentPage;
+    private HomeFragment homeFragment;
+    private ResultFragment resultFragment;
+
 
     public LecInfoView(Context context) {
         super(context);
@@ -45,17 +48,7 @@ public class LecInfoView extends ConstraintLayout {
         rightIn = AnimationUtils.loadAnimation(context, R.anim.right_in);
         leftOut = AnimationUtils.loadAnimation(context, R.anim.left_out);
 
-
-        flipper = findViewById(R.id.viewFlipper);
         result = findViewById(R.id.result);
-        result.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                flipper.setInAnimation(rightIn);
-                flipper.setOutAnimation(leftOut);
-                flipper.showNext();
-            }
-        });
         setFocusable(true);
     }
 
@@ -65,13 +58,19 @@ public class LecInfoView extends ConstraintLayout {
     }
 
     public void setLecture(Lecture lecture) {
-        lecName.setText(lecture.getLecName());
-        teacher.setText(lecture.getTeacher());
-        room.setText(lecture.getLecRoom());
-        grade.setText(lecture.getGrade());
+        pager = findViewById(R.id.viewPager);
+        adapter = new PagerAdapter(main.getSupportFragmentManager());
+        pager.setAdapter(adapter);
+        currentPage = 0;
+
+        //instantiateItem()で今のFragmentを取得
+        homeFragment = (HomeFragment) adapter.instantiateItem(pager, 0);
+        resultFragment = (ResultFragment) adapter.instantiateItem(pager, 1);
+
+        homeFragment.setLecture(lecture);
     }
 
-    public void setContent(Context context) {
-        this.context = context;
+    public void setMain(MainActivity main) {
+        this.main = main;
     }
 }
