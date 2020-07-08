@@ -33,7 +33,7 @@ public class Lecture extends ConstraintLayout implements View.OnClickListener {
 
     private void init(Context context) {
         View layout = LayoutInflater.from(context).inflate(R.layout.lecture_layout, this);
-        lecName = layout.findViewById(R.id.lecName);
+        lecName = layout.findViewById(R.id.lecNamename);
         lecRoom = layout.findViewById(R.id.lecRoom);
         layout.setOnClickListener(this);
         isEmpty = true;
@@ -46,20 +46,8 @@ public class Lecture extends ConstraintLayout implements View.OnClickListener {
         }
     }
 
-    public String getLecName() {
-        return lecName.getText().toString();
-    }
-
-    public String getTeacher() {
-        return teacher;
-    }
-
-    public String getLecRoom() {
-        return lecRoom.getText().toString();
-    }
-
-    public String getGrade() {
-        return grade;
+    public String getLecCode() {
+        return lecCode;
     }
 
     public boolean isEmpty() {
@@ -76,5 +64,15 @@ public class Lecture extends ConstraintLayout implements View.OnClickListener {
         grade = resultMap.get("対象学年").toString();
         teacher = resultMap.get("担当教員").toString();
         isEmpty = false;
+    }
+
+    public void reset() {
+        resultMap = null;
+        lecName.setText("");
+        lecCode = null;
+        lecRoom.setText("");
+        grade = null;
+        teacher = null;
+        isEmpty = true;
     }
 }

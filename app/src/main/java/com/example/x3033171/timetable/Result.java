@@ -11,12 +11,14 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 public class Result extends ConstraintLayout {
 
     String name, lecClass, lecCode;
-    int week, period, grade;
+    int grade;
+    ArrayList<Integer> weeks, periods;
     TextView resName, resWeek, resPeriod;
     CheckBox checkBox;
     boolean checked;
@@ -32,16 +34,31 @@ public class Result extends ConstraintLayout {
         init(context);
 
         resultMap = document.getData();
-        name = document.getData().get("授業科目名").toString();
-        lecClass = document.getData().get("科目分類").toString();
-        lecCode = document.getData().get("履修コード").toString();
-        week = Integer.parseInt(document.get("timeinfo.0.week").toString());
-        period = Integer.parseInt(document.get("timeinfo.0.period").toString());
+        name = resultMap.get("授業科目名").toString();
+        lecClass = resultMap.get("科目分類").toString();
+        lecCode = resultMap.get("履修コード").toString();
+        Map<String, Map<String, String>> timeinfo = (Map<String, Map<String, String>>) resultMap.get("timeinfo");
+
+        weeks = new ArrayList<>();
+        periods = new ArrayList<>();
+        for (Map<String, String> map : timeinfo.values()) {
+            int week = Integer.parseInt(map.get("week"));
+            if (!weeks.contains(week)) {
+                weeks.add(week);
+            }
+
+            int period = Integer.parseInt(map.get("period"));
+            if (!periods.contains(period)) {
+                periods.add(period);
+            }
+        }
+//        period = Integer.parseInt(timeinfo.get("0").get("period"));
         grade = Integer.parseInt(document.get("grade").toString());
         resName.setText(name);
-        resWeek.setText(String.valueOf(week).replace("1", "月").replace("2", "火")
-        .replace("3", "水").replace("4", "木").replace("5", "金"));
-        resPeriod.setText(String.valueOf(period));
+        resWeek.setText(weeks.toString().replace("1", "月").replace("2", "火")
+        .replace("3", "水").replace("4", "木").replace("5", "金")
+        .replace("[", "").replace("]", ""));
+        resPeriod.setText(periods.toString().replace("[", "").replace("]", ""));
     }
 
     void init(Context context) {
@@ -80,12 +97,12 @@ public class Result extends ConstraintLayout {
         return grade;
     }
 
-    public int getWeek() {
-        return week;
+    public ArrayList<Integer> getWeeks() {
+        return weeks;
     }
 
-    public int getPeriod() {
-        return period;
+    public ArrayList<Integer> getPeriods() {
+        return periods;
     }
 
     public boolean getChecked() {

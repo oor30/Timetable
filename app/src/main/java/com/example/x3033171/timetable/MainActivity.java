@@ -2,29 +2,21 @@ package com.example.x3033171.timetable;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.ObjectAnimator;
-import android.animation.PropertyValuesHolder;
-import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TableLayout;
-import android.widget.Toast;
+import android.widget.FrameLayout;
 
-import com.google.android.material.behavior.SwipeDismissBehavior;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
@@ -39,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     MainActivity main;
     DrawerLayout drawerLayout;
     CoordinatorLayout coordinatorLayout;
+    FrameLayout frameLayout;
     Lecture[][] lectures;
     LecInfoView lecInfoView;
     NavigationView navigationView;
@@ -58,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawerLayout = findViewById(R.id.drawerLayout);
 //        layout = findViewById(R.id.cardView);
         coordinatorLayout = findViewById(R.id.coordinatorLayout);
+        frameLayout = findViewById(R.id.frameLayout);
 
 //        pager = findViewById(R.id.viewPager);
 //        adapter = new PagerAdapter(getSupportFragmentManager());
@@ -75,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                drawerLayout.openDrawer(Gravity.LEFT);
+                drawerLayout.openDrawer(GravityCompat.START);
             }
         });
 
@@ -114,10 +108,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
 
-        // 講義の詳細を前面に表示するView "LecInfoView"
-        lecInfoView = findViewById(R.id.lecInfoView);
-        lecInfoView.setMain(this);
-        behavior = BottomSheetBehavior.from(lecInfoView);
+//        // 講義の詳細を前面に表示するView "LecInfoView"
+//        lecInfoView = findViewById(R.id.lecInfoView);
+//        lecInfoView.setMain(this);
+//        behavior = BottomSheetBehavior.from(lecInfoView);
+//        behavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        behavior = BottomSheetBehavior.from(frameLayout);
         behavior.setState(BottomSheetBehavior.STATE_HIDDEN);
     }
 
@@ -133,6 +129,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         SharedPreferences preferences = getSharedPreferences("pref", MODE_PRIVATE);
         Gson gson = new Gson();
         Set<String> lecCodes = preferences.getStringSet("lecCodes", null);  // 登録済みの講義の履修コードを取得
+
+        for (int i=0; i<5; i++) {
+            for (int j=0; j<5; j++) {
+                lectures[i][j].reset();
+            }
+        }
 
         if (lecCodes != null) {
             for (String lecCode : lecCodes) {
@@ -170,7 +172,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         @Override
         public void onClick(View v) {
             if (!((Lecture)v).isEmpty()) {
-                lecInfoView.setLecture((Lecture)v);
+                Lecture lec = (Lecture)v;
+                int week;
+                int period = 0;
+                outside: for (week=0; week<5; week++) {
+                    for (period=0; period<5; period++) {
+                        if (lec == lectures[week][period]) {
+                            break outside;
+                        }
+                    }
+                }
+                // 講義の詳細を前面に表示するView "LecInfoView"
+                frameLayout.removeAllViews();
+                LecInfoView lecInfoView = new LecInfoView(main);
+                lecInfoView.setMain(main);
+                lecInfoView.setLecture(lec.getLecCode(), week, period);
+                Log.d("Main#onClick", lec.getLecCode());
+                frameLayout.addView(lecInfoView);
                 behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             }
         }

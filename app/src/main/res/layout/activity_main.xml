@@ -103,31 +103,31 @@
 
                     <com.example.x3033171.timetable.Lecture
                         android:id="@+id/lec11"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1" />
 
                     <com.example.x3033171.timetable.Lecture
                         android:id="@+id/lec21"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1" />
 
                     <com.example.x3033171.timetable.Lecture
                         android:id="@+id/lec31"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1" />
 
                     <com.example.x3033171.timetable.Lecture
                         android:id="@+id/lec41"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1" />
 
                     <com.example.x3033171.timetable.Lecture
                         android:id="@+id/lec51"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1" />
                 </TableRow>
@@ -139,31 +139,31 @@
 
                     <com.example.x3033171.timetable.Lecture
                         android:id="@+id/lec12"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1" />
 
                     <com.example.x3033171.timetable.Lecture
                         android:id="@+id/lec22"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1" />
 
                     <com.example.x3033171.timetable.Lecture
                         android:id="@+id/lec32"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1" />
 
                     <com.example.x3033171.timetable.Lecture
                         android:id="@+id/lec42"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1" />
 
                     <com.example.x3033171.timetable.Lecture
                         android:id="@+id/lec52"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1" />
                 </TableRow>
@@ -175,31 +175,31 @@
 
                     <com.example.x3033171.timetable.Lecture
                         android:id="@+id/lec13"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1" />
 
                     <com.example.x3033171.timetable.Lecture
                         android:id="@+id/lec23"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1" />
 
                     <com.example.x3033171.timetable.Lecture
                         android:id="@+id/lec33"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1" />
 
                     <com.example.x3033171.timetable.Lecture
                         android:id="@+id/lec43"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1" />
 
                     <com.example.x3033171.timetable.Lecture
                         android:id="@+id/lec53"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1" />
                 </TableRow>
@@ -211,31 +211,31 @@
 
                     <com.example.x3033171.timetable.Lecture
                         android:id="@+id/lec14"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1" />
 
                     <com.example.x3033171.timetable.Lecture
                         android:id="@+id/lec24"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1" />
 
                     <com.example.x3033171.timetable.Lecture
                         android:id="@+id/lec34"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1" />
 
                     <com.example.x3033171.timetable.Lecture
                         android:id="@+id/lec44"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1" />
 
                     <com.example.x3033171.timetable.Lecture
                         android:id="@+id/lec54"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1" />
                 </TableRow>
@@ -247,31 +247,31 @@
 
                     <com.example.x3033171.timetable.Lecture
                         android:id="@+id/lec15"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1" />
 
                     <com.example.x3033171.timetable.Lecture
                         android:id="@+id/lec25"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1" />
 
                     <com.example.x3033171.timetable.Lecture
                         android:id="@+id/lec35"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1" />
 
                     <com.example.x3033171.timetable.Lecture
                         android:id="@+id/lec45"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1" />
 
                     <com.example.x3033171.timetable.Lecture
                         android:id="@+id/lec55"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1">
 
@@ -281,12 +281,12 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <com.example.x3033171.timetable.LecInfoView
-            android:id="@+id/lecInfoView"
+        <FrameLayout
+            android:id="@+id/frameLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:behavior_hideable="true"
-            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior" />
+            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+            app:behavior_hideable="true"/>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

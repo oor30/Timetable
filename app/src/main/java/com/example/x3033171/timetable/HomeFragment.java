@@ -1,13 +1,25 @@
 package com.example.x3033171.timetable;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Objects;
+import java.util.prefs.Preferences;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -26,8 +38,7 @@ public class HomeFragment extends Fragment {
     private String mParam2;
 
     private TextView lecName, teacher, room, text, grade, result;
-    private Lecture lecture;
-    private String n, t, r, g;
+    private String lecCode;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -63,25 +74,35 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
-        lecName = view.findViewById(R.id.lecName);
-        teacher = view.findViewById(R.id.teacher);
-        room = view.findViewById(R.id.room);
-        grade = view.findViewById(R.id.grade);
+        View mInflater = inflater.inflate(R.layout.fragment_home, container, false);
+        Log.d("HomeFragment#", "onCreateView");
+        lecName = mInflater.findViewById(R.id.lecNamename);
+        teacher = mInflater.findViewById(R.id.teacher);
+        room = mInflater.findViewById(R.id.room);
+        grade = mInflater.findViewById(R.id.grade);
 
-        lecName.setText(n);
-        teacher.setText(t);
-        room.setText(r);
-        grade.setText(g);
+        lecCode = getArguments().getString("lecCode");
+        SharedPreferences preferences = Objects.requireNonNull(getActivity()).getSharedPreferences("pref", Context.MODE_PRIVATE);
+        Gson gson = new Gson();
+        Type type = new TypeToken<Map<String, Object>>() {}.getType();
+        Map<String, Object> resultMap = gson.fromJson(preferences.getString(lecCode, ""), type);    // 講義情報を取得
+        int week = getArguments().getInt("week");
+        int period = getArguments().getInt("period");
+
+        lecName.setText(resultMap.get("授業科目名").toString());
+        teacher.setText(resultMap.get("担当教員").toString());
+        grade.setText(resultMap.get("対象学年").toString());
+
+        Map<String, Map<String, String>> timeinfo = (Map<String, Map<String, String>>) resultMap.get("timeinfo");
+        ArrayList<String> rooms = new ArrayList<>();
+        for (Map<String, String> map : timeinfo.values()) {
+
+        }
+        room.setText(timeinfo.get("0").get("room"));
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        return mInflater;
     }
 
     public void setLecture(Lecture lecture) {
-        this.lecture = lecture;
-        n = lecture.getLecName();
-        t = lecture.getTeacher();
-        r = lecture.getLecRoom();
-        g = lecture.getGrade();
     }
 }

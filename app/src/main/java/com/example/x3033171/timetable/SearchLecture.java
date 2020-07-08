@@ -189,13 +189,13 @@ public class SearchLecture extends AppCompatActivity implements NavigationView.O
         Collections.sort(resultArray, new Comparator<Result>() {
             @Override
             public int compare(Result o1, Result o2) {
-                return o1.getPeriod() - o2.getPeriod();
+                return o1.getPeriods().get(0) - o2.getPeriods().get(0);
             }
         });
         Collections.sort(resultArray, new Comparator<Result>() {
             @Override
             public int compare(Result o1, Result o2) {
-                return o1.getWeek() - o2.getWeek();
+                return o1.getWeeks().get(0) - o2.getWeeks().get(0);
             }
         });
 
@@ -227,17 +227,17 @@ public class SearchLecture extends AppCompatActivity implements NavigationView.O
                 }
             }
             if (week > 0) {     // 曜日
-                if (result.getWeek() != week) {
+                if (!result.getWeeks().contains(week)) {
                     continue;
                 }
             }
             if (period > 0) {   // 時限
-                if (result.getPeriod() != period) {
+                if (!result.getPeriods().contains(period)) {
                     continue;
                 }
             }
-            if (weekTmp != result.getWeek()) {
-                weekTmp = result.getWeek();
+            if (weekTmp != result.getWeeks().get(0)) {
+                weekTmp = result.getWeeks().get(0);
                 TextView weekText = new TextView(this);
                 weekText.setBackgroundColor(Color.parseColor("#EEEEEE"));
                 weekText.setTextSize(18);

@@ -1,7 +1,9 @@
 package com.example.x3033171.timetable;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -39,7 +41,7 @@ public class LecInfoView extends ConstraintLayout {
 
     private void init(Context context) {
         LayoutInflater.from(context).inflate(R.layout.lec_info_view, this);
-        lecName = findViewById(R.id.lecName);
+        lecName = findViewById(R.id.lecNamename);
         teacher = findViewById(R.id.teacher);
         room = findViewById(R.id.room);
         text = findViewById(R.id.text);
@@ -57,17 +59,23 @@ public class LecInfoView extends ConstraintLayout {
         return super.performClick();
     }
 
-    public void setLecture(Lecture lecture) {
+    public void setLecture(String lecCode, int week, int period) {
         pager = findViewById(R.id.viewPager);
         adapter = new PagerAdapter(main.getSupportFragmentManager());
-        pager.setAdapter(adapter);
+        adapter.setLecCode(lecCode);
         currentPage = 0;
 
         //instantiateItem()で今のFragmentを取得
         homeFragment = (HomeFragment) adapter.instantiateItem(pager, 0);
         resultFragment = (ResultFragment) adapter.instantiateItem(pager, 1);
 
-        homeFragment.setLecture(lecture);
+        Log.d("LecInfoView#setLecture", "LecInfoView#setLecture");
+        Bundle bundle = new Bundle();
+        bundle.putString("lecCode", lecCode);
+        bundle.putInt("week", week);
+        bundle.putInt("period", period);
+        homeFragment.setArguments(bundle);
+        pager.setAdapter(adapter);
     }
 
     public void setMain(MainActivity main) {
