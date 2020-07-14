@@ -17,6 +17,7 @@ import android.view.View;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -46,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         coordinatorLayout = findViewById(R.id.coordinatorLayout);
 
         pager = findViewById(R.id.viewPager);
-        adapter = new PagerAdapter(getSupportFragmentManager());
+        adapter = new PagerAdapter(getSupportFragmentManager(), this);
         pager.setAdapter(adapter);
 
         //instantiateItem()で今のFragmentを取得
@@ -99,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
 
-//        // 講義の詳細を前面に表示するView "LecInfoView"
+        // 講義の詳細を前面に表示するView "LecInfoView"
         lecInfoView = findViewById(R.id.lecInfoView);
         lecInfoView.tabLayout.setupWithViewPager(pager);
         behavior = BottomSheetBehavior.from(lecInfoView);

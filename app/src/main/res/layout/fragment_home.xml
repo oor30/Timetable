@@ -28,15 +28,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
-                android:text="教授"
-                android:textSize="18sp" />
+                android:text="教授" />
 
             <TextView
                 android:id="@+id/room"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="教室"
-                android:textSize="18sp" />
+                android:text="教室" />
 
             <TextView
                 android:id="@+id/result"
