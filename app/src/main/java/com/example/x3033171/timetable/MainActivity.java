@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 //        // 講義の詳細を前面に表示するView "LecInfoView"
         lecInfoView = findViewById(R.id.lecInfoView);
-//        lecInfoView.setMain(this);
+        lecInfoView.tabLayout.setupWithViewPager(pager);
         behavior = BottomSheetBehavior.from(lecInfoView);
         behavior.setState(BottomSheetBehavior.STATE_HIDDEN);
     }

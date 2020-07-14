@@ -7,9 +7,12 @@ import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.google.android.material.tabs.TabLayout;
+
 public class LecInfoView extends ConstraintLayout {
 
     TextView lecName;
+    TabLayout tabLayout;
 
     public LecInfoView(Context context) {
         super(context);
@@ -29,6 +32,7 @@ public class LecInfoView extends ConstraintLayout {
     private void init(Context context) {
         LayoutInflater.from(context).inflate(R.layout.lec_info_view, this);
         lecName = findViewById(R.id.lecName);
+        tabLayout = findViewById(R.id.tabLayout);
     }
 
     @Override
