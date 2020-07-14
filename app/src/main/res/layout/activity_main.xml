@@ -281,12 +281,13 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <FrameLayout
-            android:id="@+id/frameLayout"
+        <com.example.x3033171.timetable.LecInfoView
+            android:id="@+id/lecInfoView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-            app:behavior_hideable="true"/>
+            app:behavior_hideable="true"
+            app:behavior_peekHeight="200dp"/>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

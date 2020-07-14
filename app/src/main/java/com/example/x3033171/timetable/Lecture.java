@@ -50,6 +50,14 @@ public class Lecture extends ConstraintLayout implements View.OnClickListener {
         return lecCode;
     }
 
+    public Map<String, Object> getResultMap() {
+        return resultMap;
+    }
+
+    public String getLecName() {
+        return lecName.getText().toString();
+    }
+
     public boolean isEmpty() {
         return isEmpty;
     }

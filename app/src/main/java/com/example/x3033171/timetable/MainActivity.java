@@ -11,11 +11,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.navigation.NavigationView;
@@ -28,39 +26,32 @@ import java.util.Set;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    MainActivity main;
     DrawerLayout drawerLayout;
     CoordinatorLayout coordinatorLayout;
-    FrameLayout frameLayout;
     Lecture[][] lectures;
     LecInfoView lecInfoView;
     NavigationView navigationView;
     private ViewPager pager;
     private PagerAdapter adapter;
-    private int currentPage;
     private HomeFragment homeFragment;
     private ResultFragment resultFragment;
-    BottomSheetBehavior behavior;
+    BottomSheetBehavior<LecInfoView> behavior;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        main = this;
         drawerLayout = findViewById(R.id.drawerLayout);
-//        layout = findViewById(R.id.cardView);
         coordinatorLayout = findViewById(R.id.coordinatorLayout);
-        frameLayout = findViewById(R.id.frameLayout);
 
-//        pager = findViewById(R.id.viewPager);
-//        adapter = new PagerAdapter(getSupportFragmentManager());
-//        pager.setAdapter(adapter);
-//        currentPage = 0;
-//
-//        //instantiateItem()で今のFragmentを取得
-//        homeFragment = (HomeFragment) adapter.instantiateItem(pager, 0);
-//        resultFragment = (ResultFragment) adapter.instantiateItem(pager, 1);
+        pager = findViewById(R.id.viewPager);
+        adapter = new PagerAdapter(getSupportFragmentManager());
+        pager.setAdapter(adapter);
+
+        //instantiateItem()で今のFragmentを取得
+        homeFragment = (HomeFragment) adapter.instantiateItem(pager, 0);
+        resultFragment = (ResultFragment) adapter.instantiateItem(pager, 1);
 
         // ツールバー・検索ボックス
         androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.toolbar);
@@ -109,11 +100,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
 //        // 講義の詳細を前面に表示するView "LecInfoView"
-//        lecInfoView = findViewById(R.id.lecInfoView);
+        lecInfoView = findViewById(R.id.lecInfoView);
 //        lecInfoView.setMain(this);
-//        behavior = BottomSheetBehavior.from(lecInfoView);
-//        behavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-        behavior = BottomSheetBehavior.from(frameLayout);
+        behavior = BottomSheetBehavior.from(lecInfoView);
         behavior.setState(BottomSheetBehavior.STATE_HIDDEN);
     }
 
@@ -174,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (!((Lecture)v).isEmpty()) {
                 Lecture lec = (Lecture)v;
                 int week;
-                int period = 0;
+                int period;
                 outside: for (week=0; week<5; week++) {
                     for (period=0; period<5; period++) {
                         if (lec == lectures[week][period]) {
@@ -183,12 +172,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                 }
                 // 講義の詳細を前面に表示するView "LecInfoView"
-                frameLayout.removeAllViews();
-                LecInfoView lecInfoView = new LecInfoView(main);
-                lecInfoView.setMain(main);
-                lecInfoView.setLecture(lec.getLecCode(), week, period);
+                lecInfoView.setLecName(lec.getLecName());
+                homeFragment = (HomeFragment) adapter.instantiateItem(pager, 0);
+                homeFragment.setLecture(lec.getResultMap());
                 Log.d("Main#onClick", lec.getLecCode());
-                frameLayout.addView(lecInfoView);
                 behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             }
         }

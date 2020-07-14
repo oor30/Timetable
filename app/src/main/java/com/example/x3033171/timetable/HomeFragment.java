@@ -37,8 +37,7 @@ public class HomeFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private TextView lecName, teacher, room, text, grade, result;
-    private String lecCode;
+    private TextView teacher, room, grade;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -76,33 +75,23 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         View mInflater = inflater.inflate(R.layout.fragment_home, container, false);
         Log.d("HomeFragment#", "onCreateView");
-        lecName = mInflater.findViewById(R.id.lecNamename);
         teacher = mInflater.findViewById(R.id.teacher);
         room = mInflater.findViewById(R.id.room);
         grade = mInflater.findViewById(R.id.grade);
-
-        lecCode = getArguments().getString("lecCode");
-        SharedPreferences preferences = Objects.requireNonNull(getActivity()).getSharedPreferences("pref", Context.MODE_PRIVATE);
-        Gson gson = new Gson();
-        Type type = new TypeToken<Map<String, Object>>() {}.getType();
-        Map<String, Object> resultMap = gson.fromJson(preferences.getString(lecCode, ""), type);    // 講義情報を取得
-        int week = getArguments().getInt("week");
-        int period = getArguments().getInt("period");
-
-        lecName.setText(resultMap.get("授業科目名").toString());
-        teacher.setText(resultMap.get("担当教員").toString());
-        grade.setText(resultMap.get("対象学年").toString());
-
-        Map<String, Map<String, String>> timeinfo = (Map<String, Map<String, String>>) resultMap.get("timeinfo");
-        ArrayList<String> rooms = new ArrayList<>();
-        for (Map<String, String> map : timeinfo.values()) {
-
-        }
-        room.setText(timeinfo.get("0").get("room"));
-        // Inflate the layout for this fragment
         return mInflater;
     }
 
-    public void setLecture(Lecture lecture) {
+    public void setLecture(Map<String, Object> resultMap) {
+        if (resultMap != null && !resultMap.isEmpty()) {
+            teacher.setText(resultMap.get("担当教員").toString());
+            grade.setText(resultMap.get("対象学年").toString());
+
+            Map<String, Map<String, String>> timeinfo = (Map<String, Map<String, String>>) resultMap.get("timeinfo");
+            ArrayList<String> rooms = new ArrayList<>();
+            for (Map<String, String> map : timeinfo.values()) {
+
+            }
+            room.setText(timeinfo.get("0").get("room"));
+        }
     }
 }
