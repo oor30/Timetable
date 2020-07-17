@@ -137,11 +137,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void setLecture(Map<String, Object> resultMap) {
         Map<String, Object> timeinfo = (Map<String, Object>) resultMap.get("timeinfo");
-        for (Map.Entry<String, Object> entry : timeinfo.entrySet()) {
-            Map<String, Object> map = (Map<String, Object>) entry.getValue();
-            int week = Integer.parseInt(map.get("week").toString());
-            int period = Integer.parseInt(map.get("period").toString());
-            lectures[week-1][period-1].setLecInfo(resultMap);
+        if (timeinfo != null) {
+            for (Map.Entry<String, Object> entry : timeinfo.entrySet()) {
+                Map<String, Object> map = (Map<String, Object>) entry.getValue();
+                String weekTmp = String.valueOf(map.get("week"));
+                int week;
+                if (!weekTmp.equals("null")) week = (int) Double.parseDouble(weekTmp);
+                else break;
+                String periodTmp = String.valueOf(map.get("period"));
+                int period;
+                if (!periodTmp.equals("null")) period = (int) Double.parseDouble(periodTmp);
+                else break;
+                lectures[week-1][period-1].setLecInfo(resultMap);
+            }
         }
     }
 

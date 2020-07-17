@@ -25,45 +25,56 @@ public class Database {
         this.sl = sl;
     }
 
-    public void searchLecture(Map<String, String> map) {
-        if (map == null) {
-            map = new HashMap<>();
-        }
-        CollectionReference cr = db.collection("lectures");
-        Query query = cr;
-        int cnt = 0;
-        String[] timeinfoKeys = {"semester", "week", "period", "room"};
-        for (Map.Entry<String, String> entry : map.entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue();
-            if (Arrays.asList(timeinfoKeys).contains(entry.getKey())) {
-                key = "timeinfo.0." + key;
-            }
-            List<String> values = Arrays.asList(value.split("、"));
-            if (values.size() > 1) {
-                if (cnt == 0) {
-                    query = cr.whereIn(key, values);
-                } else if (cnt > 0) {
-                    query = query.whereIn(key, values);
-                }
-            } else {
-                if (cnt == 0) {
-                    query = cr.whereEqualTo(key, value);
-                } else if (cnt > 0) {
-                    query = query.whereEqualTo(key, value);
-                }
-            }
-            cnt++;
-        }
-        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+    public void searchLecture(String faculty) {
+//        if (map == null) {
+//            map = new HashMap<>();
+//        }
+        CollectionReference cr = db.collection("lectures4");
+        cr = cr.document(faculty).collection(faculty + "_lectures");
+        cr.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
+                    Log.d("Database", "タスク完了");
                     sl.makeResults(task);
-                } else {
-                    Log.w("TAG", "Error getting documents.", task.getException());
                 }
             }
         });
+//        sl.makeResults(cr.get());
+//        Query query = cr;
+//        int cnt = 0;
+//        String[] timeinfoKeys = {"semester", "week", "period", "room"};
+//        for (Map.Entry<String, String> entry : map.entrySet()) {
+//            String key = entry.getKey();
+//            String value = entry.getValue();
+//            if (Arrays.asList(timeinfoKeys).contains(entry.getKey())) {
+//                key = "timeinfo.0." + key;
+//            }
+//            List<String> values = Arrays.asList(value.split("、"));
+//            if (values.size() > 1) {
+//                if (cnt == 0) {
+//                    query = cr.whereIn(key, values);
+//                } else if (cnt > 0) {
+//                    query = query.whereIn(key, values);
+//                }
+//            } else {
+//                if (cnt == 0) {
+//                    query = cr.whereEqualTo(key, value);
+//                } else if (cnt > 0) {
+//                    query = query.whereEqualTo(key, value);
+//                }
+//            }
+//            cnt++;
+//        }
+//        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                if (task.isSuccessful()) {
+//                    sl.makeResults(task);
+//                } else {
+//                    Log.w("TAG", "Error getting documents.", task.getException());
+//                }
+//            }
+//        });
     }
 }

@@ -4,18 +4,16 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.ListActivity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -25,10 +23,8 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Space;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -44,7 +40,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-@CoordinatorLayout.DefaultBehavior(SearchLecture.Behavior.class)
 public class SearchLecture extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     // フィールド変数
     // レイアウト・サイドメニュー
@@ -52,6 +47,7 @@ public class SearchLecture extends AppCompatActivity implements NavigationView.O
     DrawerLayout drawerLayout;
     ConstraintLayout constraintLayout;
     NavigationView navigationView;
+    RecyclerView recyclerView;
 
     // View
     androidx.appcompat.widget.SearchView searchView;
@@ -67,6 +63,7 @@ public class SearchLecture extends AppCompatActivity implements NavigationView.O
     ArrayList<String> bunrui;
     ArrayList<Result> resultArray;
     Database database;
+    Set<String> selectedLecCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +75,7 @@ public class SearchLecture extends AppCompatActivity implements NavigationView.O
         name = faculty = department = course = "";
         bunrui = new ArrayList<>(Arrays.asList("航空宇宙生産技術", "全学教職", "全学科対象科目", "複合領域", "工学部", faculty, department, course));
         resultArray = new ArrayList<>();
+        selectedLecCode = new HashSet<>();
 
         // レイアウト・サイドメニュー
         drawerLayout = findViewById(R.id.drawerLayout2);
@@ -87,6 +85,9 @@ public class SearchLecture extends AppCompatActivity implements NavigationView.O
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.editLectures);
 
+        recyclerView = findViewById(R.id.recyclerView);
+
+
         // ツールバー・検索ボックス
         androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.inflateMenu(R.menu.search);
@@ -94,7 +95,7 @@ public class SearchLecture extends AppCompatActivity implements NavigationView.O
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                drawerLayout.openDrawer(Gravity.LEFT);
+                drawerLayout.openDrawer(GravityCompat.START);
             }
         });
 //        searchView = (SearchView) toolbar.getMenu().findItem(R.id.menu_search).getActionView();
@@ -150,12 +151,21 @@ public class SearchLecture extends AppCompatActivity implements NavigationView.O
 
         // データベース
         database = new Database(this);
-        database.searchLecture(null);
+        database.searchLecture(spnFaculty.getSelectedItem().toString());
     }
 
     public static int convertDp2Px(float dp, Context context){
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         return (int)(dp * metrics.density);
+    }
+
+    private List<Result> createDataset(QueryDocumentSnapshot document) {
+        List<Result> dataset = new ArrayList<>();
+        for (int i=0; i<50; i++) {
+            Result result = new Result(document);
+            dataset.add(result);
+        }
+        return dataset;
     }
 
     // データベースで検索後、呼び出されるメソッド
@@ -165,14 +175,23 @@ public class SearchLecture extends AppCompatActivity implements NavigationView.O
         Set<String> lecCodes = preferences.getStringSet("lecCodes", null);
 
         // ドキュメントからResultインスタンスを作成・resultArray(ArrayList)に保存
+        Log.d("SearchLecture", "結果を追加中");
+        resultArray.clear();
         for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
-            Result result = new Result(this, document);
-            if (lecCodes!=null && lecCodes.contains(result.getLecCode())) {
+            Result result = new Result(document);
+            if (lecCodes != null && lecCodes.contains(result.getLecCode())) {
                 result.setChecked(true);
             }
-            Log.d("test", "結果を追加");
             resultArray.add(result);
         }
+
+
+//            Result result = new Result(this, document);
+//            if (lecCodes!=null && lecCodes.contains(result.getLecCode())) {
+//                result.setChecked(true);
+//            }
+
+//            resultArray.add(result);
 
         // 結果を表示
         showResults();
@@ -181,26 +200,26 @@ public class SearchLecture extends AppCompatActivity implements NavigationView.O
 
     // 結果を表示するメソッド
     public void showResults() {
-        resultsLayout.removeAllViews();
-        resultsLayout.addView(space1);
-        resultsLayout.addView(space2);
+//        resultsLayout.removeAllViews();
+//        resultsLayout.addView(space1);
+//        resultsLayout.addView(space2);
 
         // 曜日・時限でソート
         Collections.sort(resultArray, new Comparator<Result>() {
             @Override
             public int compare(Result o1, Result o2) {
-                return o1.getPeriods().get(0) - o2.getPeriods().get(0);
+                return o1.getPeriods().iterator().next() - o2.getPeriods().iterator().next();
             }
         });
         Collections.sort(resultArray, new Comparator<Result>() {
             @Override
             public int compare(Result o1, Result o2) {
-                return o1.getWeeks().get(0) - o2.getWeeks().get(0);
+                return o1.getWeeks().iterator().next() - o2.getWeeks().iterator().next();
             }
         });
 
         // 結果をresultsLayoutに追加
-        int weekTmp = 0;
+        List<Result> resultArray_ = new ArrayList<>();
         outside: for (Result result : resultArray) {
             // 条件に合わないものはcontinueして排除していく
             if (selectedCB.isChecked()) {   // 選択されているか
@@ -216,11 +235,11 @@ public class SearchLecture extends AppCompatActivity implements NavigationView.O
                     }
                 }
             }
-            if (spnFaculty.getSelectedItemPosition() > 0) {
-                if (!bunrui.contains(result.getLecClass())) {
-                    continue;
-                }
-            }
+//            if (spnFaculty.getSelectedItemPosition() > 0) {
+//                if (!bunrui.contains(result.getLecClass())) {
+//                    continue;
+//                }
+//            }
             if (grade > 0) {    // 学年
                 if (result.getGrade() != grade) {
                     continue;
@@ -236,22 +255,29 @@ public class SearchLecture extends AppCompatActivity implements NavigationView.O
                     continue;
                 }
             }
-            if (weekTmp != result.getWeeks().get(0)) {
-                weekTmp = result.getWeeks().get(0);
-                TextView weekText = new TextView(this);
-                weekText.setBackgroundColor(Color.parseColor("#EEEEEE"));
-                weekText.setTextSize(18);
-                weekText.setPadding(convertDp2Px(8, this), convertDp2Px(4, this), convertDp2Px(8, this), convertDp2Px(4, this));
-                weekText.setText(String.valueOf(weekTmp).replace("1", "月曜日").replace("2", "火曜日")
-                .replace("3", "水曜日").replace("4", "木曜日").replace("5", "金曜日"));
-                resultsLayout.addView(weekText,
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.MATCH_PARENT);
-            }
-            resultsLayout.addView(result,
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.MATCH_PARENT);
+            resultArray_.add(result);
+//            if (weekTmp != result.getWeeks().get(0)) {
+//                weekTmp = result.getWeeks().get(0);
+//                TextView weekText = new TextView(this);
+//                weekText.setBackgroundColor(Color.parseColor("#EEEEEE"));
+//                weekText.setTextSize(18);
+//                weekText.setPadding(convertDp2Px(8, this), convertDp2Px(4, this), convertDp2Px(8, this), convertDp2Px(4, this));
+//                weekText.setText(String.valueOf(weekTmp).replace("1", "月曜日").replace("2", "火曜日")
+//                .replace("3", "水曜日").replace("4", "木曜日").replace("5", "金曜日"));
+//                resultsLayout.addView(weekText,
+//                        LinearLayout.LayoutParams.MATCH_PARENT,
+//                        LinearLayout.LayoutParams.MATCH_PARENT);
+//            }
+//            resultsLayout.addView(result,
+//                    LinearLayout.LayoutParams.MATCH_PARENT,
+//                    LinearLayout.LayoutParams.MATCH_PARENT);
         }
+        ResultRecyclerViewAdapter adapter = new ResultRecyclerViewAdapter(resultArray_);
+        LinearLayoutManager manager = new LinearLayoutManager(this);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(manager);
+        recyclerView.setAdapter(adapter);
+        Log.d("SearchLecture", "結果を追加");
     }
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -280,8 +306,6 @@ public class SearchLecture extends AppCompatActivity implements NavigationView.O
 
                 // MainActivityに戻る
                 finish();
-    //                Intent intent = new Intent(getApplication(), MainActivity.class);
-    //                startActivity(intent);
             }
         }
     };
@@ -302,13 +326,16 @@ public class SearchLecture extends AppCompatActivity implements NavigationView.O
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             if (parent == spnFaculty) {     // 学部（不可視）
                 faculty = spnFaculty.getSelectedItem().toString();
-                if (position > 0) {     // デフォルトの選択肢ではないとき
-                    spnDepartment.performClick();   // 学科スピナーを選択
-                }
-                else if(position == 0){
-                    faculty = department = course = "";
-                }
+//                if (position > 0) {     // デフォルトの選択肢ではないとき
+//                    spnDepartment.performClick();   // 学科スピナーを選択
+//                }
+//                else if(position == 0){
+//                    faculty = department = course = "";
+//                }
                 bunrui.set(5, faculty);
+                progressBar.setVisibility(View.VISIBLE);
+                database.searchLecture(faculty);
+                return;
             }
             else if (parent == spnDepartment) {     // 学科（不可視）
                 department = spnDepartment.getSelectedItem().toString() + "工学科";
@@ -327,17 +354,10 @@ public class SearchLecture extends AppCompatActivity implements NavigationView.O
                 }
                 bunrui.set(7, course);
             }
-            else if (parent == spnGrade) {      // 学年
-                grade = position;
-            }
-            else if (parent == spnWeek) {       // 曜日
-                week = position;
-            }
-            else if (parent == spnPeriod) {     // 時限
-                period = position;
-            }
+            else if (parent == spnGrade) grade = position;      // 学年
+            else if (parent == spnWeek) week = position;        // 曜日
+            else if (parent == spnPeriod) period = position;    // 時限
             showResults();
-
         }
 
         // スピナーに変更がなかったとき
@@ -350,17 +370,11 @@ public class SearchLecture extends AppCompatActivity implements NavigationView.O
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.home) {    // ホーム
             drawerLayout.closeDrawers();    // サイドメニューを閉じる
-//            Intent intent = new Intent(getApplication(), MainActivity.class);   // MainActivityに戻る
-//            startActivity(intent);
             finish();
         }
         else if (item.getItemId() == R.id.editLectures) {   // 講義編集（このアクティビティ）
             drawerLayout.closeDrawers();    // サイドメニューを閉じる
         }
         return true;
-    }
-
-    public static class Behavior extends FloatingActionButton.Behavior {
-
     }
 }

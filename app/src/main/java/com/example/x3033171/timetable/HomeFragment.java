@@ -86,12 +86,17 @@ public class HomeFragment extends Fragment {
             teacher.setText(resultMap.get("担当教員").toString());
             grade.setText(resultMap.get("対象学年").toString());
 
-            Map<String, Map<String, String>> timeinfo = (Map<String, Map<String, String>>) resultMap.get("timeinfo");
+            Map<String, Map<String, Object>> timeinfo = (Map<String, Map<String, Object>>) resultMap.get("timeinfo");
             ArrayList<String> rooms = new ArrayList<>();
-            for (Map<String, String> map : timeinfo.values()) {
-
+            if (timeinfo != null) {
+                for (Map<String, Object> map : timeinfo.values()) {
+                    String roomTmp = String.valueOf(map.get("room"));
+                    if (!roomTmp.equals("null") && !rooms.contains(roomTmp)) {
+                        rooms.add(roomTmp);
+                    }
+                }
             }
-            room.setText(timeinfo.get("0").get("room"));
+            room.setText(rooms.toString());
         }
     }
 }

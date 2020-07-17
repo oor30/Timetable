@@ -8,8 +8,13 @@
     <string name="search_hint">講義を検索</string>
 
     <string-array name="faculty">
-        <item>学部</item>
+        <item>全学共通教育</item>
+        <item>全学共通教職</item>
+        <item>教育学部</item>
+        <item>地域科学部</item>
+        <item>医学部（看護学科）</item>
         <item>工学部</item>
+        <item>応用生物科学部</item>
     </string-array>
 
     <string-array name="department">
