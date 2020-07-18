@@ -17,7 +17,6 @@ import android.view.View;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -43,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        drawerLayout = findViewById(R.id.drawerLayout);
+        drawerLayout = findViewById(R.id.drawerLayout3);
         coordinatorLayout = findViewById(R.id.coordinatorLayout);
 
         pager = findViewById(R.id.viewPager);
@@ -148,7 +147,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 int period;
                 if (!periodTmp.equals("null")) period = (int) Double.parseDouble(periodTmp);
                 else break;
-                lectures[week-1][period-1].setLecInfo(resultMap);
+                if (week != 0 && period != 0) {
+                    lectures[week-1][period-1].setLecInfo(resultMap);
+                }
             }
         }
     }
@@ -157,10 +158,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.editLectures:
-                DrawerLayout drawerLayout = findViewById(R.id.drawerLayout);
                 drawerLayout.closeDrawers();
                 Intent intent = new Intent(this, SearchLecture.class);
                 startActivity(intent);
+                return true;
+            case R.id.readHtml:
+                drawerLayout.closeDrawers();
+                Intent intent1 = new Intent(this, WebViewActivity.class);
+                startActivity(intent1);
                 return true;
         }
         return false;
@@ -186,6 +191,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 homeFragment.setLecture(lec.getResultMap());
                 Log.d("Main#onClick", lec.getLecCode());
                 behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            }
+            else {
+                behavior.setState(BottomSheetBehavior.STATE_HIDDEN);
             }
         }
     };

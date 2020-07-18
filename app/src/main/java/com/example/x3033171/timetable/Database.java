@@ -11,24 +11,40 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.Set;
+
+import static android.content.ContentValues.TAG;
 
 public class Database {
     FirebaseFirestore db;
     SearchLecture sl;
+    WebViewActivity wv;
 
     Database(SearchLecture sl) {
         db = FirebaseFirestore.getInstance();
         this.sl = sl;
     }
 
+    Database(WebViewActivity wv) {
+        db = FirebaseFirestore.getInstance();
+        this.wv = wv;
+    }
+
+    public void searchLecture(Set<String> lecCodes) {
+        CollectionReference cr = db.collection("lectures5");
+        Query query = cr;
+        Log.d(TAG, "searchLecture: " + lecCodes);
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    wv.writePref(task);
+                }
+            }
+        });
+    }
+
     public void searchLecture(String faculty) {
-//        if (map == null) {
-//            map = new HashMap<>();
-//        }
         CollectionReference cr = db.collection("lectures4");
         cr = cr.document(faculty).collection(faculty + "_lectures");
         cr.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {

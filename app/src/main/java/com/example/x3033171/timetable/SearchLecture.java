@@ -285,11 +285,12 @@ public class SearchLecture extends AppCompatActivity implements NavigationView.O
         public void onClick(View v) {
             // 講義編集完了ボタン
             if (v.getId() == R.id.btFinish) {   // 講義編集完了ボタン
+                Log.d("SearchLecture", "onClick: ");
                 // 共有プリファレンスに選択した講義の①情報（Map）と②履修コード（String）を保存
                 SharedPreferences preferences = getSharedPreferences("pref", MODE_PRIVATE);
                 preferences.edit().clear().apply();     // 共有プリファレンス"pref"のデータを削除
                 Gson gson = new Gson();
-                HashSet<String> recCodes = new HashSet<>();     // 履修コードのHashSet
+                HashSet<String> lecCodes = new HashSet<>();     // 履修コードのHashSet
 
                 // ①講義情報
                 for (Result result : resultArray) {     // すべての対象の講義に対し
@@ -297,12 +298,12 @@ public class SearchLecture extends AppCompatActivity implements NavigationView.O
                         Map<String, Object> resultMap = result.getResultMap();  // 講義情報（Map）を取り出し
                         preferences.edit().putString(result.getLecCode(), gson.toJson(resultMap)).apply();  // 履修コードをKeyとしてGsonを用いて保存
 
-                        recCodes.add(result.getLecCode());  // その履修コードをHashSetに保存
+                        lecCodes.add(result.getLecCode());  // その履修コードをHashSetに保存
                     }
                 }
 
                 // ②履修コード
-                preferences.edit().putStringSet("lecCodes", recCodes).apply();
+                preferences.edit().putStringSet("lecCodes", lecCodes).apply();
 
                 // MainActivityに戻る
                 finish();

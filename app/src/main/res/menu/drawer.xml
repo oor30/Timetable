@@ -10,6 +10,10 @@
             android:id="@+id/editLectures"
             android:icon="@drawable/ic_baseline_edit_24"
             android:title="講義編集"/>
+        <item
+            android:id="@+id/readHtml"
+            android:icon="@drawable/ic_baseline_web_24"
+            android:title="Campus-Gから追加"/>
     </group>
 
     <item android:title="TITLE!">

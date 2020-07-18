@@ -1,7 +1,5 @@
 package com.example.x3033171.timetable;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -12,14 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Objects;
-import java.util.prefs.Preferences;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -83,8 +75,8 @@ public class HomeFragment extends Fragment {
 
     public void setLecture(Map<String, Object> resultMap) {
         if (resultMap != null && !resultMap.isEmpty()) {
-            teacher.setText(resultMap.get("担当教員").toString());
-            grade.setText(resultMap.get("対象学年").toString());
+            teacher.setText(String.valueOf(resultMap.get("担当教員")));
+            grade.setText(String.valueOf(resultMap.get("対象学年")));
 
             Map<String, Map<String, Object>> timeinfo = (Map<String, Map<String, Object>>) resultMap.get("timeinfo");
             ArrayList<String> rooms = new ArrayList<>();
@@ -96,7 +88,7 @@ public class HomeFragment extends Fragment {
                     }
                 }
             }
-            room.setText(rooms.toString());
+            room.setText(rooms.toString().replace("[", "").replace("]", ""));
         }
     }
 }

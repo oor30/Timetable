@@ -5,7 +5,7 @@ import androidx.annotation.NonNull;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
-import java.util.Map;import java.util.Set;
+import java.util.Map;
 import java.util.TreeSet;
 
 //public class Result extends ConstraintLayout {
@@ -150,7 +150,7 @@ public class Result {
                     periods.add(period);
 
                     String roomTmp = String.valueOf(map.get("room"));
-                    if (rooms.contains(roomTmp) && roomTmp != "null") rooms.add(roomTmp);
+                    if (rooms.contains(roomTmp) && !roomTmp.equals("null")) rooms.add(roomTmp);
                 }
             }
             else {

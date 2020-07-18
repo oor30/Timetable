@@ -25,7 +25,7 @@ public class ResultRecyclerViewAdapter extends RecyclerView.Adapter<ResultViewHo
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ResultViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final ResultViewHolder holder, final int position) {
         holder.resWeek.setText(results.get(position).getWeeks().toString());
         holder.resPeriod.setText(results.get(position).getPeriods().toString());
         holder.resName.setText(results.get(position).getName());
@@ -35,7 +35,7 @@ public class ResultRecyclerViewAdapter extends RecyclerView.Adapter<ResultViewHo
         holder.addLecCB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                results.get(position).setChecked(true);
+                results.get(position).setChecked(holder.addLecCB.isChecked());
             }
         });
     }
