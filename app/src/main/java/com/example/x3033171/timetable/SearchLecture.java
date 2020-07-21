@@ -44,10 +44,10 @@ import java.util.Set;
 public class SearchLecture extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     // フィールド変数
     // レイアウト・サイドメニュー
-    LinearLayout resultsLayout;
     DrawerLayout drawerLayout;
     ConstraintLayout constraintLayout;
     NavigationView navigationView;
+//    private RecyclerViewAdapter adapter;
     private ResultRecyclerViewAdapter adapter;
     private RecyclerView recyclerView;
     private LinearLayoutManager manager;
@@ -84,7 +84,6 @@ public class SearchLecture extends AppCompatActivity implements NavigationView.O
         // レイアウト・サイドメニュー
         drawerLayout = findViewById(R.id.drawerLayout2);
         constraintLayout = findViewById(R.id.slConstLay);
-        resultsLayout = findViewById(R.id.linearLayout);
         navigationView = findViewById(R.id.navigationView2);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.editLectures);
@@ -149,9 +148,6 @@ public class SearchLecture extends AppCompatActivity implements NavigationView.O
         // プレグレスバー
         progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);
-
-        space1 = findViewById(R.id.space1);
-        space2 = findViewById(R.id.space2);
 
         // データベース
         database = new Database(this);
@@ -226,8 +222,8 @@ public class SearchLecture extends AppCompatActivity implements NavigationView.O
 
         // 結果をresultsLayoutに追加
         List<Model> resultArray_ = new ArrayList<>();
-        resultArray_.add(new Model("曜日情報なし"));
-        resultArray_.add(new Model("null"));
+//        resultArray_.add(new Model("曜日情報なし"));
+//        resultArray_.add(new Model("null"));
         Integer weekTmp = 0;
         outside: for (Result result : resultArray) {
 
@@ -289,15 +285,6 @@ public class SearchLecture extends AppCompatActivity implements NavigationView.O
                 Log.d("SearchLecture", model.name);
             }
         }
-//        resultArray_ = new ArrayList<>();
-//        resultArray_.add(new Model("月曜日"));
-//        resultArray_.add(new Model("火曜日"));
-//        resultArray_.add(new Model("水曜日"));
-//        if (resultArray.size() > 0) {
-//            for (Result result : resultArray) {
-//                resultArray_.add(new Model(result));
-//            }
-//        }
         if (resultArray_.size() > 0) {
             adapter.submitList(resultArray_);
         }

@@ -37,7 +37,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/collapsingToolbarLayout"
+            app:layout_constraintTop_toBottomOf="@+id/collapsingToolbarLayout"
             app:layout_constraintVertical_bias="1.0">
 
             <com.google.android.material.appbar.AppBarLayout
@@ -54,15 +54,6 @@
                     android:layout_height="wrap_content"
                     android:fitsSystemWindows="true"
                     app:layout_scrollFlags="scroll|enterAlways">
-
-                    <Space
-                        android:id="@+id/space"
-                        android:layout_width="0dp"
-                        android:layout_height="?attr/actionBarSize"
-                        android:layout_margin="5dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
 
                     <Button
                         android:id="@+id/btFinish"
@@ -82,7 +73,7 @@
                         android:visibility="visible"
                         app:layout_constraintEnd_toStartOf="@+id/spnDepartment"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/space" />
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <Spinner
                         android:id="@+id/spnDepartment"
@@ -103,8 +94,7 @@
                         android:spinnerMode="dialog"
                         android:visibility="visible"
                         app:layout_constraintStart_toEndOf="@+id/spnDepartment"
-                        app:layout_constraintTop_toBottomOf="@+id/space" />
-
+                        app:layout_constraintTop_toTopOf="@+id/spnFaculty" />
                     <Spinner
                         android:id="@+id/spnGrade"
                         android:layout_width="wrap_content"
@@ -143,38 +133,28 @@
 
             </com.google.android.material.appbar.AppBarLayout>
 
-            <androidx.core.widget.NestedScrollView
-                android:id="@+id/scrollView2"
+<!--            <androidx.core.widget.NestedScrollView-->
+<!--                android:id="@+id/scrollView2"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:elevation="-5dp"-->
+<!--                android:overScrollMode="never"-->
+<!--                app:layout_scrollFlags="enterAlways">-->
+
+<!--                <LinearLayout-->
+<!--                    android:id="@+id/linearLayout"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:orientation="vertical">-->
+
+
+<!--                </LinearLayout>-->
+<!--            </androidx.core.widget.NestedScrollView>-->
+            <com.kodmap.library.kmrecyclerviewstickyheader.KmRecyclerView
+                android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:elevation="-5dp"
-                android:overScrollMode="never"
-                app:layout_scrollFlags="enterAlways">
-
-                <LinearLayout
-                    android:id="@+id/linearLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <Space
-                        android:id="@+id/space1"
-                        android:layout_width="match_parent"
-                        android:layout_height="?attr/actionBarSize"
-                        android:layout_margin="5dp" />
-
-                    <Space
-                        android:id="@+id/space2"
-                        android:layout_width="match_parent"
-                        android:layout_height="80dp" />
-
-                    <com.kodmap.library.kmrecyclerviewstickyheader.KmRecyclerView
-                        android:id="@+id/recyclerView"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
-
-                </LinearLayout>
-            </androidx.core.widget.NestedScrollView>
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
         <com.google.android.material.appbar.CollapsingToolbarLayout

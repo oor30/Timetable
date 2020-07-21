@@ -1,6 +1,5 @@
 package com.example.x3033171.timetable;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,23 +41,6 @@ public class ResultRecyclerViewAdapter extends ListAdapter<Model, RecyclerView.V
             ((PostViewHolder) viewHolder).bind(getItem(i));
         }
     }
-
-//    @Override
-//    public void onBindViewHolder(@NonNull final ResultViewHolder holder, final int position) {
-//        holder.resWeek.setText(results.get(position).getWeeks().toString());
-//        holder.resPeriod.setText(results.get(position).getPeriods().toString());
-//        holder.resName.setText(results.get(position).getName());
-//        if (results.get(position).getChecked()) {
-//            holder.addLecCB.setChecked(true);
-//        }
-//        holder.addLecCB.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                results.get(position).setChecked(holder.addLecCB.isChecked());
-//            }
-//        });
-//    }
-
 
     class HeaderViewHolder extends RecyclerView.ViewHolder {
         public TextView title;
@@ -118,13 +100,21 @@ public class ResultRecyclerViewAdapter extends ListAdapter<Model, RecyclerView.V
     @Override
     public void bindHeaderData(View header, Integer headerPosition) {
         TextView textView = header.findViewById(R.id.week_header);
-        textView.setText(getItem(headerPosition).title);
+        try {
+            textView.setText(getItem(headerPosition).title);
+        } catch (Exception e) {
+            textView.setText("null");
+        }
     }
 
     @Override
     public Boolean isHeader(Integer itemPosition) {
-        Log.d("isHeader", "itemPosition:" + itemPosition + getItem(0).week);
-        return getItem(itemPosition).type.equals(ItemType.Header);
+        try {
+            return getItem(itemPosition).type.equals(ItemType.Header);
+        } catch (Exception e) {
+//            Log.w(TAG, "isHeader: error");
+            return false;
+        }
     }
 
     public static final DiffUtil.ItemCallback<Model> ModelDiffUtilCallback =

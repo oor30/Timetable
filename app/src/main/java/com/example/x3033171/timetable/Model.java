@@ -24,7 +24,7 @@ public class Model {
         type = ItemType.Header;
     }
 
-    public Model(Result result) {
+    public Model(@NotNull Result result) {
         week = String.valueOf(result.getWeeks().iterator().next());
         weeks = result.getWeeks();
         periods = result.getPeriods();
