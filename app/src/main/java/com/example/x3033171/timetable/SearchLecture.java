@@ -29,6 +29,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
+import com.kodmap.library.kmrecyclerviewstickyheader.KmHeaderItemDecoration;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,7 +48,10 @@ public class SearchLecture extends AppCompatActivity implements NavigationView.O
     DrawerLayout drawerLayout;
     ConstraintLayout constraintLayout;
     NavigationView navigationView;
-    RecyclerView recyclerView;
+    private ResultRecyclerViewAdapter adapter;
+    private RecyclerView recyclerView;
+    private LinearLayoutManager manager;
+    private KmHeaderItemDecoration kmHeaderItemDecoration;
 
     // View
     androidx.appcompat.widget.SearchView searchView;
@@ -200,10 +204,6 @@ public class SearchLecture extends AppCompatActivity implements NavigationView.O
 
     // 結果を表示するメソッド
     public void showResults() {
-//        resultsLayout.removeAllViews();
-//        resultsLayout.addView(space1);
-//        resultsLayout.addView(space2);
-
         // 曜日・時限でソート
         Collections.sort(resultArray, new Comparator<Result>() {
             @Override
@@ -214,13 +214,23 @@ public class SearchLecture extends AppCompatActivity implements NavigationView.O
         Collections.sort(resultArray, new Comparator<Result>() {
             @Override
             public int compare(Result o1, Result o2) {
+                return o1.getGrade() - o2.getGrade();
+            }
+        });
+        Collections.sort(resultArray, new Comparator<Result>() {
+            @Override
+            public int compare(Result o1, Result o2) {
                 return o1.getWeeks().iterator().next() - o2.getWeeks().iterator().next();
             }
         });
 
         // 結果をresultsLayoutに追加
-        List<Result> resultArray_ = new ArrayList<>();
+        List<Model> resultArray_ = new ArrayList<>();
+        resultArray_.add(new Model("曜日情報なし"));
+        resultArray_.add(new Model("null"));
+        Integer weekTmp = 0;
         outside: for (Result result : resultArray) {
+
             // 条件に合わないものはcontinueして排除していく
             if (selectedCB.isChecked()) {   // 選択されているか
                 if (!result.getChecked()) {
@@ -255,28 +265,42 @@ public class SearchLecture extends AppCompatActivity implements NavigationView.O
                     continue;
                 }
             }
-            resultArray_.add(result);
-//            if (weekTmp != result.getWeeks().get(0)) {
-//                weekTmp = result.getWeeks().get(0);
-//                TextView weekText = new TextView(this);
-//                weekText.setBackgroundColor(Color.parseColor("#EEEEEE"));
-//                weekText.setTextSize(18);
-//                weekText.setPadding(convertDp2Px(8, this), convertDp2Px(4, this), convertDp2Px(8, this), convertDp2Px(4, this));
-//                weekText.setText(String.valueOf(weekTmp).replace("1", "月曜日").replace("2", "火曜日")
-//                .replace("3", "水曜日").replace("4", "木曜日").replace("5", "金曜日"));
-//                resultsLayout.addView(weekText,
-//                        LinearLayout.LayoutParams.MATCH_PARENT,
-//                        LinearLayout.LayoutParams.MATCH_PARENT);
-//            }
-//            resultsLayout.addView(result,
-//                    LinearLayout.LayoutParams.MATCH_PARENT,
-//                    LinearLayout.LayoutParams.MATCH_PARENT);
+
+            // 曜日ヘッダーを追加
+            if (!result.getWeeks().iterator().next().equals(weekTmp)) {
+                weekTmp = result.getWeeks().iterator().next();
+                String week = String.valueOf(weekTmp).replace("1", "月曜日").replace("2", "火曜日")
+                        .replace("3", "水曜日").replace("4", "木曜日")
+                        .replace("5", "金曜日").replace("6", "未定");
+                resultArray_.add(new Model(week));
+            }
+            resultArray_.add(new Model(result));
         }
-        ResultRecyclerViewAdapter adapter = new ResultRecyclerViewAdapter(resultArray_);
-        LinearLayoutManager manager = new LinearLayoutManager(this);
-        recyclerView.setHasFixedSize(true);
+        adapter = new ResultRecyclerViewAdapter();
+        manager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(manager);
+        kmHeaderItemDecoration = new KmHeaderItemDecoration(adapter);
         recyclerView.setAdapter(adapter);
+        for (Model model : resultArray_) {
+            if (model.type.equals(ItemType.Header)) {
+                Log.d("SearchLecture", model.week);
+            }
+            else {
+                Log.d("SearchLecture", model.name);
+            }
+        }
+//        resultArray_ = new ArrayList<>();
+//        resultArray_.add(new Model("月曜日"));
+//        resultArray_.add(new Model("火曜日"));
+//        resultArray_.add(new Model("水曜日"));
+//        if (resultArray.size() > 0) {
+//            for (Result result : resultArray) {
+//                resultArray_.add(new Model(result));
+//            }
+//        }
+        if (resultArray_.size() > 0) {
+            adapter.submitList(resultArray_);
+        }
         Log.d("SearchLecture", "結果を追加");
     }
 

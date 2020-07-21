@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.TreeSet;
 
@@ -56,7 +57,7 @@ import java.util.TreeSet;
 //    }
 //
 //    void init(Context context) {
-//        LayoutInflater.from(context).inflate(R.layout.result_layout, this);
+//        LayoutInflater.from(context).inflate(R.layout.result_post, this);
 //        resName = findViewById(R.id.resName);
 //        resWeek = findViewById(R.id.resWeek);
 //        resPeriod = findViewById(R.id.resPeriod);
@@ -122,6 +123,15 @@ public class Result {
     private boolean checked;
     private Map<String, Object> resultMap;
 
+    public Result() {
+        name = lecClass = lecCode = "nullString";
+        grade = 0;
+        weeks = new TreeSet<>(Arrays.asList(0));
+        periods = new TreeSet<>(Arrays.asList(0));
+        rooms = new ArrayList<>(Arrays.asList("nullRoom"));
+        checked = false;
+    }
+
     public Result(QueryDocumentSnapshot document) {
         try {
             resultMap = document.getData();
@@ -153,8 +163,10 @@ public class Result {
                     if (rooms.contains(roomTmp) && !roomTmp.equals("null")) rooms.add(roomTmp);
                 }
             }
-            else {
+            if (weeks.size() == 0) {
                 weeks.add(0);
+            }
+            if (periods.size() == 0) {
                 periods.add(0);
             }
             String gradeTmp = String.valueOf(document.get("grade"));
