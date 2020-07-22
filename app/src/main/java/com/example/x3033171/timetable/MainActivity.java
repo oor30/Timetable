@@ -2,6 +2,7 @@ package com.example.x3033171.timetable;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -21,6 +22,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
@@ -36,6 +38,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private HomeFragment homeFragment;
     private ResultFragment resultFragment;
     BottomSheetBehavior<LecInfoView> behavior;
+    ConstraintLayout bottomGrade;
+    BottomSheetBehavior<ConstraintLayout> gradeBehavior;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         homeFragment = (HomeFragment) adapter.instantiateItem(pager, 0);
         resultFragment = (ResultFragment) adapter.instantiateItem(pager, 1);
 
-        // ツールバー・検索ボックス
+        // ツールバー
         androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.inflateMenu(R.menu.search);
         toolbar.setNavigationIcon(R.drawable.ic_baseline_menu_24);
@@ -104,6 +108,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         lecInfoView.tabLayout.setupWithViewPager(pager);
         behavior = BottomSheetBehavior.from(lecInfoView);
         behavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+
+        bottomGrade = findViewById(R.id.bottomGrade);
+        gradeBehavior = BottomSheetBehavior.from(bottomGrade);
+        gradeBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
     }
 
     @Override
@@ -114,23 +122,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.home);   // メニューの時間割を選択済みに
 
-        // 時間割を設定
-        SharedPreferences preferences = getSharedPreferences("pref", MODE_PRIVATE);
-        Gson gson = new Gson();
-        Set<String> lecCodes = preferences.getStringSet("lecCodes", null);  // 登録済みの講義の履修コードを取得
-
         for (int i=0; i<5; i++) {
             for (int j=0; j<5; j++) {
                 lectures[i][j].reset();
             }
         }
 
-        if (lecCodes != null) {
-            for (String lecCode : lecCodes) {
-                Type type = new TypeToken<Map<String, Object>>() {}.getType();
-                Map<String, Object> resultMap = gson.fromJson(preferences.getString(lecCode, ""), type);    // 講義情報を取得
-                setLecture(resultMap);
-            }
+        // 時間割を設定
+        Set<String> lecCodes = Fun.readLecCodes(this);
+        ArrayList<Map<String, Object>> resultMaps = Fun.readLecInfo(this, lecCodes);
+        for (Map<String, Object> resultMap : resultMaps) {
+            setLecture(resultMap);
         }
     }
 
@@ -155,20 +157,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.editLectures:
-                drawerLayout.closeDrawers();
-                Intent intent = new Intent(this, SearchLecture.class);
-                startActivity(intent);
-                return true;
-            case R.id.readHtml:
-                drawerLayout.closeDrawers();
-                Intent intent1 = new Intent(this, WebViewActivity.class);
-                startActivity(intent1);
-                return true;
-        }
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {        switch (item.getItemId()) {
+        case R.id.editLectures:
+            drawerLayout.closeDrawers();
+            Intent intent = new Intent(this, SearchLecture.class);
+            startActivity(intent);
+            return true;
+        case R.id.readHtml:
+            drawerLayout.closeDrawers();
+            Intent intent1 = new Intent(this, WebViewActivity.class);
+            startActivity(intent1);
+            return true;
+        case R.id.myLec:
+            drawerLayout.closeDrawers();
+            Intent intent2 = new Intent(this, MyLecturesActivity.class);
+            startActivity(intent2);
+            return true;
+    }
         return false;
+
     }
 
     private View.OnClickListener lectureOnClick = new View.OnClickListener() {

@@ -37,34 +37,32 @@
                 android:text="教室" />
 
             <TextView
-                android:id="@+id/result"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="成績" />
-
-            <TextView
                 android:id="@+id/grade"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="対象学年" />
 
-            <Button
-                android:id="@+id/button6"
+            <TextView
+                android:id="@+id/result"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:text="Button" />
+                android:layout_height="wrap_content"
+                android:text="成績" />
 
             <Button
-                android:id="@+id/button7"
+                android:id="@+id/btSetGrade"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="wrap_content"
                 android:text="Button" />
 
-            <Button
-                android:id="@+id/button8"
+            <EditText
+                android:id="@+id/textMemo"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:text="Button" />
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="メモ"
+                android:inputType="textMultiLine|text"
+                android:maxLines="10" />
+
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

@@ -19,16 +19,13 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.Space;
 import android.widget.Spinner;
 
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.gson.Gson;
 import com.kodmap.library.kmrecyclerviewstickyheader.KmHeaderItemDecoration;
 
 import java.util.ArrayList;
@@ -44,14 +41,8 @@ import java.util.Set;
 public class SearchLecture extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     // フィールド変数
     // レイアウト・サイドメニュー
-    DrawerLayout drawerLayout;
-    ConstraintLayout constraintLayout;
-    NavigationView navigationView;
-//    private RecyclerViewAdapter adapter;
-    private ResultRecyclerViewAdapter adapter;
+    private DrawerLayout drawerLayout;
     private RecyclerView recyclerView;
-    private LinearLayoutManager manager;
-    private KmHeaderItemDecoration kmHeaderItemDecoration;
 
     // View
     androidx.appcompat.widget.SearchView searchView;
@@ -59,7 +50,6 @@ public class SearchLecture extends AppCompatActivity implements NavigationView.O
     Spinner spnFaculty, spnDepartment, spnCourse, spnGrade, spnWeek, spnPeriod;
     CheckBox selectedCB;
     ProgressBar progressBar;
-    Space space1, space2;
 
     // 変数
     int grade, week, period;
@@ -83,8 +73,7 @@ public class SearchLecture extends AppCompatActivity implements NavigationView.O
 
         // レイアウト・サイドメニュー
         drawerLayout = findViewById(R.id.drawerLayout2);
-        constraintLayout = findViewById(R.id.slConstLay);
-        navigationView = findViewById(R.id.navigationView2);
+        NavigationView navigationView = findViewById(R.id.navigationView2);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.editLectures);
 
@@ -101,9 +90,7 @@ public class SearchLecture extends AppCompatActivity implements NavigationView.O
                 drawerLayout.openDrawer(GravityCompat.START);
             }
         });
-//        searchView = (SearchView) toolbar.getMenu().findItem(R.id.menu_search).getActionView();
         searchView = findViewById(R.id.search_bar);
-//        searchView.setQueryHint("講義を検索");       // ヒントを表示
         searchView.setIconified(false);             // 検索ボックスを開いた状態にする
         searchView.clearFocus();                    // フォーカスを外す（これがないと一瞬キーボードが開く時がある）
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -171,8 +158,7 @@ public class SearchLecture extends AppCompatActivity implements NavigationView.O
     // データベースで検索後、呼び出されるメソッド
     public void makeResults(Task<QuerySnapshot> task) {
         // 選択済みの教科を共有プリファレンスから取得
-        SharedPreferences preferences = getSharedPreferences("pref", MODE_PRIVATE);
-        Set<String> lecCodes = preferences.getStringSet("lecCodes", null);
+        Set<String> lecCodes = Fun.readAllLecCodes(this);
 
         // ドキュメントからResultインスタンスを作成・resultArray(ArrayList)に保存
         Log.d("SearchLecture", "結果を追加中");
@@ -184,14 +170,6 @@ public class SearchLecture extends AppCompatActivity implements NavigationView.O
             }
             resultArray.add(result);
         }
-
-
-//            Result result = new Result(this, document);
-//            if (lecCodes!=null && lecCodes.contains(result.getLecCode())) {
-//                result.setChecked(true);
-//            }
-
-//            resultArray.add(result);
 
         // 結果を表示
         showResults();
@@ -222,8 +200,6 @@ public class SearchLecture extends AppCompatActivity implements NavigationView.O
 
         // 結果をresultsLayoutに追加
         List<Model> resultArray_ = new ArrayList<>();
-//        resultArray_.add(new Model("曜日情報なし"));
-//        resultArray_.add(new Model("null"));
         Integer weekTmp = 0;
         outside: for (Result result : resultArray) {
 
@@ -272,10 +248,10 @@ public class SearchLecture extends AppCompatActivity implements NavigationView.O
             }
             resultArray_.add(new Model(result));
         }
-        adapter = new ResultRecyclerViewAdapter();
-        manager = new LinearLayoutManager(this);
+        ResultRecyclerViewAdapter adapter = new ResultRecyclerViewAdapter();
+        LinearLayoutManager manager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(manager);
-        kmHeaderItemDecoration = new KmHeaderItemDecoration(adapter);
+        KmHeaderItemDecoration kmHeaderItemDecoration = new KmHeaderItemDecoration(adapter);
         recyclerView.setAdapter(adapter);
         for (Model model : resultArray_) {
             if (model.type.equals(ItemType.Header)) {
@@ -297,26 +273,13 @@ public class SearchLecture extends AppCompatActivity implements NavigationView.O
             // 講義編集完了ボタン
             if (v.getId() == R.id.btFinish) {   // 講義編集完了ボタン
                 Log.d("SearchLecture", "onClick: ");
-                // 共有プリファレンスに選択した講義の①情報（Map）と②履修コード（String）を保存
-                SharedPreferences preferences = getSharedPreferences("pref", MODE_PRIVATE);
-                preferences.edit().clear().apply();     // 共有プリファレンス"pref"のデータを削除
-                Gson gson = new Gson();
-                HashSet<String> lecCodes = new HashSet<>();     // 履修コードのHashSet
-
-                // ①講義情報
-                for (Result result : resultArray) {     // すべての対象の講義に対し
-                    if (result.getChecked()) {          // 選択された講義は
-                        Map<String, Object> resultMap = result.getResultMap();  // 講義情報（Map）を取り出し
-                        preferences.edit().putString(result.getLecCode(), gson.toJson(resultMap)).apply();  // 履修コードをKeyとしてGsonを用いて保存
-
-                        lecCodes.add(result.getLecCode());  // その履修コードをHashSetに保存
+                ArrayList<Map<String, Object>> resultMaps = new ArrayList<>();
+                for (Result result : resultArray) {
+                    if (result.getChecked()) {
+                        resultMaps.add(result.getResultMap());
                     }
                 }
-
-                // ②履修コード
-                preferences.edit().putStringSet("lecCodes", lecCodes).apply();
-
-                // MainActivityに戻る
+                Fun.writeLecInfo(getApplicationContext(), resultMaps);
                 finish();
             }
         }

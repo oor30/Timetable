@@ -53,6 +53,8 @@ dependencies {
     implementation 'com.airbnb.android:epoxy:3.4.2'
     implementation 'com.airbnb.android:epoxy-databinding:3.4.2'
     implementation 'com.github.smhdk:KM-Recyclerview-Sticky-Header:v1.0.0'
+
+    implementation 'org.florescu.android.rangeseekbar:rangeseekbar-library:0.3.0'
 }
 repositories {
     mavenCentral()

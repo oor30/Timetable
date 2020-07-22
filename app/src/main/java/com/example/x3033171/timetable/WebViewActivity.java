@@ -6,6 +6,8 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -31,6 +33,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -78,11 +81,22 @@ public class WebViewActivity extends AppCompatActivity implements View.OnClickLi
 
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
+        settings.setBuiltInZoomControls(true);
         settings.setUseWideViewPort(true);
         settings.setLoadWithOverviewMode(true);
         webView.setWebViewClient(new ViewClient());
         webView.addJavascriptInterface(this, "activity");
         webView.loadUrl("https://alss-portal.gifu-u.ac.jp/");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        new AlertDialog.Builder(this)
+                .setTitle("使い方")
+                .setMessage("ログイン後、My時間割を表示してからボタンを押してください")
+                .setPositiveButton("OK", null)
+                .show();
     }
 
     @Override
@@ -146,23 +160,32 @@ public class WebViewActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     public void writePref(Task<QuerySnapshot> task) {
-        // 共有プリファレンスに選択した講義の①情報（Map）と②履修コード（String）を保存
-        SharedPreferences preferences = getSharedPreferences("pref", MODE_PRIVATE);
-        preferences.edit().clear().apply();     // 共有プリファレンス"pref"のデータを削除
-        Gson gson = new Gson();
-        Map<String, Object> map;
-
+        ArrayList<Map<String, Object>> resultMaps = new ArrayList<>();
         for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
-            map = document.getData();
+            Map<String, Object> map = document.getData();
             String lecCode = String.valueOf(map.get("履修コード"));
             if (lecCodes.contains(lecCode)) {
-                // ①講義情報
-                preferences.edit().putString(String.valueOf(map.get("履修コード")), gson.toJson(map)).apply();  // 履修コードをKeyとしてGsonを用いて保存
-                lecCodes.add(lecCode);
+                resultMaps.add(map);
             }
         }
-        // ②履修コード
-        preferences.edit().putStringSet("lecCodes", lecCodes).apply();
+        Fun.writeLecInfo(this, resultMaps);
+//        // 共有プリファレンスに選択した講義の①情報（Map）と②履修コード（String）を保存
+//        SharedPreferences preferences = getSharedPreferences("pref", MODE_PRIVATE);
+//        preferences.edit().clear().apply();     // 共有プリファレンス"pref"のデータを削除
+//        Gson gson = new Gson();
+//        Map<String, Object> map;
+//
+//        for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
+//            map = document.getData();
+//            String lecCode = String.valueOf(map.get("履修コード"));
+//            if (lecCodes.contains(lecCode)) {
+//                // ①講義情報
+//                preferences.edit().putString(String.valueOf(map.get("履修コード")), gson.toJson(map)).apply();  // 履修コードをKeyとしてGsonを用いて保存
+//                lecCodes.add(lecCode);
+//            }
+//        }
+//        // ②履修コード
+//        preferences.edit().putStringSet("lecCodes", lecCodes).apply();
 
         // MainActivityに戻る
         progressBar.setVisibility(View.INVISIBLE);

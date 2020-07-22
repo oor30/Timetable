@@ -3,11 +3,13 @@ package com.example.x3033171.timetable;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -30,6 +32,7 @@ public class HomeFragment extends Fragment {
     private String mParam2;
 
     private TextView teacher, room, grade;
+    Button btSetGrade;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -70,6 +73,14 @@ public class HomeFragment extends Fragment {
         teacher = mInflater.findViewById(R.id.teacher);
         room = mInflater.findViewById(R.id.room);
         grade = mInflater.findViewById(R.id.grade);
+        btSetGrade = mInflater.findViewById(R.id.btSetGrade);
+        btSetGrade.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GradeDialogFragment gdf = new GradeDialogFragment();
+                gdf.show(getChildFragmentManager(), "dialog");
+            }
+        });
         return mInflater;
     }
 

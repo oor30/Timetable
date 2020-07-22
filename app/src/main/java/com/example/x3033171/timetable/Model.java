@@ -4,12 +4,14 @@ import androidx.annotation.NonNull;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
 public class Model {
     @NonNull
     String week = "null", title, name = "null", grade = "0";
+    String lecCode;
     @NotNull
     Set<Integer> weeks = new TreeSet<>(), periods = new TreeSet<>();
     boolean checked = false;
@@ -35,13 +37,33 @@ public class Model {
         type = ItemType.Post;
     }
 
-    @NotNull
-    public String getTitle() {
-        return title;
-    }
+    public Model(Map<String, Object> resultMap, boolean checked) {
+        name = String.valueOf(resultMap.get("授業科目名"));
+        Map<String, Map<String, Object>> timeinfo = (Map<String, Map<String, Object>>) resultMap.get("timeinfo");
+        if (timeinfo != null) {
+            for (Map<String, Object> map : timeinfo.values()) {
 
-    public void setTitle(@NotNull String title) {
-        this.title = title;
+                String weekTmp = String.valueOf(map.get("week"));
+                int week;
+                if (!weekTmp.equals("null")) week = (int) Double.parseDouble(weekTmp);
+                else week = 0;
+                weeks.add(week);
+
+                String periodTmp = String.valueOf(map.get("period"));
+                int period;
+                if (!periodTmp.equals("null")) period = (int) Double.parseDouble(periodTmp);
+                else period = 0;
+                periods.add(period);
+            }
+        }
+        if (weeks.size() == 0) {
+            weeks.add(0);
+        }
+        if (periods.size() == 0) {
+            periods.add(0);
+        }
+        lecCode = String.valueOf(resultMap.get("履修コード"));
+        this.checked = checked;
     }
 
     public void setName(@NotNull String name) {
@@ -53,25 +75,9 @@ public class Model {
         return name;
     }
 
-    public void setWeek(@NotNull String week) {
-        this.week = week;
-    }
-
     @NotNull
     public Set<Integer> getWeeks() {
         return weeks;
-    }
-
-    public void setWeeks(@NotNull Set<Integer> weeks) {
-        this.weeks = weeks;
-    }
-
-    public String getGrade() {
-        return grade;
-    }
-
-    public void setGrade(String grade) {
-        this.grade = grade;
     }
 
     @NotNull
@@ -79,8 +85,8 @@ public class Model {
         return periods;
     }
 
-    public void setPeriods(@NotNull Set<Integer> periods) {
-        this.periods = periods;
+    public String getLecCode() {
+        return lecCode;
     }
 
     public boolean isChecked() {
@@ -90,20 +96,4 @@ public class Model {
     public void setChecked(boolean checked) {
         this.checked = checked;
     }
-
-    @NotNull
-    public Integer getType() {
-        return type;
-    }
-
-    public void setType(@NotNull Integer type) {
-        this.type = type;
-    }
-
-    @NotNull
-    public String getWeek() {
-        return week;
-    }
-
-
 }

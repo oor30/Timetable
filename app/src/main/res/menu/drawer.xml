@@ -7,6 +7,9 @@
             android:icon="@drawable/ic_baseline_grid_on_24"
             android:title="時間割" />
         <item
+            android:id="@+id/myLec"
+            android:title="My講義"/>
+        <item
             android:id="@+id/editLectures"
             android:icon="@drawable/ic_baseline_edit_24"
             android:title="講義編集"/>
