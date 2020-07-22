@@ -9,7 +9,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -18,10 +17,7 @@ import android.view.View;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.navigation.NavigationView;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
@@ -38,8 +34,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private HomeFragment homeFragment;
     private ResultFragment resultFragment;
     BottomSheetBehavior<LecInfoView> behavior;
-    ConstraintLayout bottomGrade;
-    BottomSheetBehavior<ConstraintLayout> gradeBehavior;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,10 +102,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         lecInfoView.tabLayout.setupWithViewPager(pager);
         behavior = BottomSheetBehavior.from(lecInfoView);
         behavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-
-        bottomGrade = findViewById(R.id.bottomGrade);
-        gradeBehavior = BottomSheetBehavior.from(bottomGrade);
-        gradeBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
     }
 
     @Override
@@ -160,7 +150,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {        switch (item.getItemId()) {
         case R.id.editLectures:
             drawerLayout.closeDrawers();
-            Intent intent = new Intent(this, SearchLecture.class);
+            Intent intent = new Intent(this, SearchLectureActivity.class);
             startActivity(intent);
             return true;
         case R.id.readHtml:

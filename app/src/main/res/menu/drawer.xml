@@ -8,27 +8,28 @@
             android:title="時間割" />
         <item
             android:id="@+id/myLec"
-            android:title="My講義"/>
-        <item
-            android:id="@+id/editLectures"
-            android:icon="@drawable/ic_baseline_edit_24"
-            android:title="講義編集"/>
-        <item
-            android:id="@+id/readHtml"
-            android:icon="@drawable/ic_baseline_web_24"
-            android:title="Campus-Gから追加"/>
+            android:icon="@drawable/ic_baseline_toc_24"
+            android:title="MyLectures"/>
+<!--        <item-->
+<!--            android:id="@+id/editLectures"-->
+<!--            android:icon="@drawable/ic_baseline_edit_24"-->
+<!--            android:title="講義編集"/>-->
+<!--        <item-->
+<!--            android:id="@+id/readHtml"-->
+<!--            android:icon="@drawable/ic_baseline_web_24"-->
+<!--            android:title="Campus-Gから追加"/>-->
     </group>
 
-    <item android:title="TITLE!">
+    <item android:title="講義編集">
         <menu>
             <item
-                android:id="@+id/menu_item3"
-                android:icon="@android:drawable/ic_menu_save"
-                android:title="Save" />
+                android:id="@+id/editLectures"
+                android:icon="@drawable/ic_baseline_edit_24"
+                android:title="検索"/>
             <item
-                android:id="@+id/menu_item4"
-                android:icon="@android:drawable/ic_menu_delete"
-                android:title="Delete" />
+                android:id="@+id/readHtml"
+                android:icon="@drawable/ic_baseline_web_24"
+                android:title="Campus-Gから追加"/>
         </menu>
     </item>
 

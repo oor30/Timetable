@@ -71,6 +71,7 @@ public class WebViewActivity extends AppCompatActivity implements View.OnClickLi
         // ツールバー・検索ボックス
         androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.inflateMenu(R.menu.search);
+        toolbar.setTitle("Campus-Gから読み込み");
         toolbar.setNavigationIcon(R.drawable.ic_baseline_menu_24);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,6 +80,7 @@ public class WebViewActivity extends AppCompatActivity implements View.OnClickLi
             }
         });
 
+        // ブラウザー
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setBuiltInZoomControls(true);
@@ -87,11 +89,8 @@ public class WebViewActivity extends AppCompatActivity implements View.OnClickLi
         webView.setWebViewClient(new ViewClient());
         webView.addJavascriptInterface(this, "activity");
         webView.loadUrl("https://alss-portal.gifu-u.ac.jp/");
-    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+        // ガイドメッセージ
         new AlertDialog.Builder(this)
                 .setTitle("使い方")
                 .setMessage("ログイン後、My時間割を表示してからボタンを押してください")

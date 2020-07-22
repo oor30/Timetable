@@ -39,6 +39,7 @@ public class MyLecturesActivity extends AppCompatActivity {
         // ツールバー
         androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.inflateMenu(R.menu.search);
+        toolbar.setTitle("MyLectures");
         toolbar.setNavigationIcon(R.drawable.ic_baseline_menu_24);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,6 +58,9 @@ public class MyLecturesActivity extends AppCompatActivity {
                     case R.id.home:
                         drawerLayout.closeDrawers();
                         finish();
+                        return true;
+                    case R.id.myLec:
+                        drawerLayout.closeDrawers();
                         return true;
                 }
                 return false;

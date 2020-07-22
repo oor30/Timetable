@@ -17,10 +17,10 @@ import static android.content.ContentValues.TAG;
 
 public class Database {
     FirebaseFirestore db;
-    SearchLecture sl;
+    SearchLectureActivity sl;
     WebViewActivity wv;
 
-    Database(SearchLecture sl) {
+    Database(SearchLectureActivity sl) {
         db = FirebaseFirestore.getInstance();
         this.sl = sl;
     }

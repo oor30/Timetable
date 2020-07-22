@@ -13,7 +13,7 @@
         android:theme="@style/MyTheme">
         <activity android:name=".MyLecturesActivity"></activity>
         <activity android:name=".WebViewActivity" />
-        <activity android:name=".SearchLecture" />
+        <activity android:name=".SearchLectureActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

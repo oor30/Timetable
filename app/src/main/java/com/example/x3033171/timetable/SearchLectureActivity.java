@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -38,7 +39,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-public class SearchLecture extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class SearchLectureActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     // フィールド変数
     // レイアウト・サイドメニュー
     private DrawerLayout drawerLayout;
@@ -343,12 +344,20 @@ public class SearchLecture extends AppCompatActivity implements NavigationView.O
     // サイドメニューNavigationViewのイベント
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.home) {    // ホーム
-            drawerLayout.closeDrawers();    // サイドメニューを閉じる
-            finish();
-        }
-        else if (item.getItemId() == R.id.editLectures) {   // 講義編集（このアクティビティ）
-            drawerLayout.closeDrawers();    // サイドメニューを閉じる
+        drawerLayout.closeDrawers();    // サイドメニューを閉じる
+        switch (item.getItemId()) {
+            case R.id.home:     // ホーム
+                finish();
+                break;
+            case R.id.myLec:
+                Intent intent = new Intent();
+
+                break;
+            case R.id.editLectures:    // 講義編集（このアクティビティ）
+                break;
+            case R.id.readHtml:
+
+                break;
         }
         return true;
     }
