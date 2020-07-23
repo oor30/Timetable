@@ -1,4 +1,4 @@
-package com.example.x3033171.timetable;
+package com.example.x3033171.timetable.webView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,6 +22,9 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.x3033171.timetable.Database;
+import com.example.x3033171.timetable.Fun;
+import com.example.x3033171.timetable.R;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -168,23 +171,10 @@ public class WebViewActivity extends AppCompatActivity implements View.OnClickLi
             }
         }
         Fun.writeLecInfo(this, resultMaps);
-//        // 共有プリファレンスに選択した講義の①情報（Map）と②履修コード（String）を保存
-//        SharedPreferences preferences = getSharedPreferences("pref", MODE_PRIVATE);
-//        preferences.edit().clear().apply();     // 共有プリファレンス"pref"のデータを削除
-//        Gson gson = new Gson();
-//        Map<String, Object> map;
-//
-//        for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
-//            map = document.getData();
-//            String lecCode = String.valueOf(map.get("履修コード"));
-//            if (lecCodes.contains(lecCode)) {
-//                // ①講義情報
-//                preferences.edit().putString(String.valueOf(map.get("履修コード")), gson.toJson(map)).apply();  // 履修コードをKeyとしてGsonを用いて保存
-//                lecCodes.add(lecCode);
-//            }
-//        }
-//        // ②履修コード
-//        preferences.edit().putStringSet("lecCodes", lecCodes).apply();
+        Set<String> overLecCodes = Fun.checkLecOver(this);
+        if (overLecCodes != null) {
+
+        }
 
         // MainActivityに戻る
         progressBar.setVisibility(View.INVISIBLE);

@@ -1,4 +1,4 @@
-package com.example.x3033171.timetable;
+package com.example.x3033171.timetable.main;
 
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
@@ -13,14 +13,16 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-public class PagerAdapter extends FragmentPagerAdapter {
+import com.example.x3033171.timetable.R;
+
+class PagerAdapter extends FragmentPagerAdapter {
 
     private static final int PAGE_NUM = 2;
 
     private CharSequence[] tabTitles = {"about", "to do"};
     private Activity main;
 
-    public PagerAdapter(@NonNull FragmentManager fm, Activity activity) {
+    PagerAdapter(@NonNull FragmentManager fm, Activity activity) {
         super(fm);
         main = activity;
     }

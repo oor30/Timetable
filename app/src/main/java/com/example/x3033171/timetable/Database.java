@@ -4,6 +4,8 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.x3033171.timetable.searchLecture.SearchLectureActivity;
+import com.example.x3033171.timetable.webView.WebViewActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -20,12 +22,12 @@ public class Database {
     SearchLectureActivity sl;
     WebViewActivity wv;
 
-    Database(SearchLectureActivity sl) {
+    public Database(SearchLectureActivity sl) {
         db = FirebaseFirestore.getInstance();
         this.sl = sl;
     }
 
-    Database(WebViewActivity wv) {
+    public Database(WebViewActivity wv) {
         db = FirebaseFirestore.getInstance();
         this.wv = wv;
     }

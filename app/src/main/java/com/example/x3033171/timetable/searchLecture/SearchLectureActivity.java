@@ -1,9 +1,8 @@
-package com.example.x3033171.timetable;
+package com.example.x3033171.timetable.searchLecture;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -11,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -23,6 +21,9 @@ import android.widget.CheckBox;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 
+import com.example.x3033171.timetable.Database;
+import com.example.x3033171.timetable.Fun;
+import com.example.x3033171.timetable.R;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -255,11 +256,11 @@ public class SearchLectureActivity extends AppCompatActivity implements Navigati
         KmHeaderItemDecoration kmHeaderItemDecoration = new KmHeaderItemDecoration(adapter);
         recyclerView.setAdapter(adapter);
         for (Model model : resultArray_) {
-            if (model.type.equals(ItemType.Header)) {
-                Log.d("SearchLecture", model.week);
+            if (model.getType().equals(ItemType.Header)) {
+                Log.d("SearchLecture", model.getWeek());
             }
             else {
-                Log.d("SearchLecture", model.name);
+                Log.d("SearchLecture", model.getName());
             }
         }
         if (resultArray_.size() > 0) {

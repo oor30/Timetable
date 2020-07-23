@@ -1,4 +1,4 @@
-package com.example.x3033171.timetable;
+package com.example.x3033171.timetable.myLectures;
 
 import android.view.View;
 import android.widget.CheckBox;
@@ -6,6 +6,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.x3033171.timetable.R;
 
 public class MyLecViewHolder extends RecyclerView.ViewHolder {
     public TextView resWeek, resPeriod, resName;

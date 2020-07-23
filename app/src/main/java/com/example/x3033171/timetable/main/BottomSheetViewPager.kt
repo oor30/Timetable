@@ -1,4 +1,4 @@
-package com.example.x3033171.timetable
+package com.example.x3033171.timetable.main
 
 import android.content.Context
 import android.util.AttributeSet

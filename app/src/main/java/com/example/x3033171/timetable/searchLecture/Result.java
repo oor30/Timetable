@@ -1,4 +1,4 @@
-package com.example.x3033171.timetable;
+package com.example.x3033171.timetable.searchLecture;
 
 import android.util.Log;
 import androidx.annotation.NonNull;

@@ -1,4 +1,4 @@
-package com.example.x3033171.timetable;
+package com.example.x3033171.timetable.main;
 
 import android.app.Dialog;
 
@@ -8,6 +8,8 @@ import androidx.fragment.app.DialogFragment;
 
 import android.os.Bundle;
 import android.view.Window;
+
+import com.example.x3033171.timetable.R;
 
 import org.florescu.android.rangeseekbar.RangeSeekBar;
 

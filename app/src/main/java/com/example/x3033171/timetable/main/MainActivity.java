@@ -1,8 +1,7 @@
-package com.example.x3033171.timetable;
+package com.example.x3033171.timetable.main;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -15,6 +14,12 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.x3033171.timetable.Fun;
+import com.example.x3033171.timetable.searchLecture.Lecture;
+import com.example.x3033171.timetable.myLectures.MyLecturesActivity;
+import com.example.x3033171.timetable.R;
+import com.example.x3033171.timetable.searchLecture.SearchLectureActivity;
+import com.example.x3033171.timetable.webView.WebViewActivity;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.navigation.NavigationView;
 
@@ -24,16 +29,14 @@ import java.util.Set;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    DrawerLayout drawerLayout;
-    CoordinatorLayout coordinatorLayout;
-    Lecture[][] lectures;
-    LecInfoView lecInfoView;
-    NavigationView navigationView;
+    private DrawerLayout drawerLayout;
+    private Lecture[][] lectures;
+    private LecInfoView lecInfoView;
     private ViewPager pager;
     private PagerAdapter adapter;
     private HomeFragment homeFragment;
     private ResultFragment resultFragment;
-    BottomSheetBehavior<LecInfoView> behavior;
+    private BottomSheetBehavior<LecInfoView> behavior;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +44,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
 
         drawerLayout = findViewById(R.id.drawerLayout3);
-        coordinatorLayout = findViewById(R.id.coordinatorLayout);
 
         pager = findViewById(R.id.viewPager);
         adapter = new PagerAdapter(getSupportFragmentManager(), this);
@@ -99,7 +101,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // 講義の詳細を前面に表示するView "LecInfoView"
         lecInfoView = findViewById(R.id.lecInfoView);
-        lecInfoView.tabLayout.setupWithViewPager(pager);
+        lecInfoView.getTabLayout().setupWithViewPager(pager);
+        lecInfoView.setMain(this);
         behavior = BottomSheetBehavior.from(lecInfoView);
         behavior.setState(BottomSheetBehavior.STATE_HIDDEN);
     }
@@ -108,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onResume() {
         super.onResume();
 
-        navigationView = findViewById(R.id.navigationView);
+        NavigationView navigationView = findViewById(R.id.navigationView);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.home);   // メニューの時間割を選択済みに
 

@@ -1,4 +1,4 @@
-package com.example.x3033171.timetable;
+package com.example.x3033171.timetable.searchLecture;
 
 import androidx.annotation.NonNull;
 
@@ -15,6 +15,27 @@ public class Model {
     @NotNull
     Set<Integer> weeks = new TreeSet<>(), periods = new TreeSet<>();
     boolean checked = false;
+
+    @NonNull
+    public String getWeek() {
+        return week;
+    }
+
+    @NonNull
+    public String getTitle() {
+        return title;
+    }
+
+    @NonNull
+    public String getGrade() {
+        return grade;
+    }
+
+    @NotNull
+    public Integer getType() {
+        return type;
+    }
+
     @NotNull
     Integer type;
 

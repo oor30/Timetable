@@ -2,12 +2,19 @@ package com.example.x3033171.timetable;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.Transformation;
+import android.widget.LinearLayout;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -83,5 +90,106 @@ public class Fun {
             }
         }
         return resultMaps;
+    }
+
+    public void writeTodo(Context context, Map<String, String> map) {
+        SharedPreferences preferences = context.getSharedPreferences("pref-todo", Context.MODE_PRIVATE);
+        Gson gson = new Gson();
+        if (map != null) {
+            String lecCode = String.valueOf(map.get("履修コード"));
+            preferences.edit().putString(lecCode, gson.toJson(map)).apply();
+        }
+    }
+
+    public Map<String, String> readTodo(Context context, String lecCode) {
+        SharedPreferences preferences = context.getSharedPreferences("pref-todo", Context.MODE_PRIVATE);
+        Gson gson = new Gson();
+        Type type = new TypeToken<Map<String, Object>>() {}.getType();
+        return gson.fromJson(preferences.getString(lecCode, ""), type);
+    }
+
+    public static void expand(final View v) {
+        v.measure(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        final int targtetHeight = v.getMeasuredHeight();
+
+        v.getLayoutParams().height = 0;
+        v.setVisibility(View.VISIBLE);
+        Animation a = new Animation()
+        {
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                v.getLayoutParams().height = interpolatedTime == 1
+                        ? LinearLayout.LayoutParams.WRAP_CONTENT
+                        : (int)(targtetHeight * interpolatedTime);
+                v.requestLayout();
+            }
+
+            @Override
+            public boolean willChangeBounds() {
+                return true;
+            }
+        };
+
+        a.setDuration((int)(targtetHeight / v.getContext().getResources().getDisplayMetrics().density));
+        v.startAnimation(a);
+    }
+
+    public static void collapse(final View v) {
+        final int initialHeight = v.getMeasuredHeight();
+
+        Animation a = new Animation()
+        {
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                if(interpolatedTime == 1){
+                    v.setVisibility(View.GONE);
+                }else{
+                    v.getLayoutParams().height = initialHeight - (int)(initialHeight * interpolatedTime);
+                    v.requestLayout();
+                }
+            }
+
+            @Override
+            public boolean willChangeBounds() {
+                return true;
+            }
+        };
+
+        a.setDuration((int)(initialHeight / v.getContext().getResources().getDisplayMetrics().density));
+        v.startAnimation(a);
+    }
+
+    public static Set<String> checkLecOver(Context context) {
+        ArrayList<Map<String, Object>> resultMaps = readAllLecInfo(context);
+        Map<String, Set<String>> weekPeriod_lecCode = new HashMap<>();
+        for (Map<String, Object> resultMap : resultMaps) {
+            String lecCode = String.valueOf(resultMap.get("履修コード"));
+            Map<String, Map<String, Object>> timeinfo = (Map<String, Map<String, Object>>) resultMap.get("timeinfo");
+            if (timeinfo != null) {
+                for (Map<String, Object> value : timeinfo.values()) {
+                    String week = String.valueOf(value.get("week"));
+                    String period = String.valueOf(value.get("period"));
+                    if (week.equals("null") && period.equals("null")) {
+                        if (weekPeriod_lecCode.containsKey(week + period)) {
+                            weekPeriod_lecCode.get(week + period).add(lecCode);
+                        } else {
+                            weekPeriod_lecCode.put(week + period, new HashSet<>(Collections.singletonList(lecCode)));
+                        }
+                    }
+                }
+            }
+        }
+
+        Set<String> overLecCodes = new HashSet<>();
+        for (Set<String> value : weekPeriod_lecCode.values()) {
+            if (value.size() > 1) {
+                overLecCodes.addAll(value);
+            }
+        }
+        if (overLecCodes.size() > 0) {
+            return overLecCodes;
+        } else {
+            return null;
+        }
     }
 }
