@@ -3,13 +3,17 @@
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollView"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:background="#FFFFFF"
     tools:context=".main.MakeTodoDialogFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:background="#FFFFFF"
         android:minWidth="300dp"
         tools:context=".main.MakeTodoDialogFragment">
 
@@ -144,7 +148,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <EditText
-            android:id="@+id/editTextTextMultiLine"
+            android:id="@+id/txMemo"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
@@ -168,8 +172,8 @@
             android:layout_marginBottom="16dp"
             android:text="作成"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/editTextTextMultiLine"
-            app:layout_constraintTop_toBottomOf="@+id/editTextTextMultiLine" />
+            app:layout_constraintEnd_toEndOf="@+id/txMemo"
+            app:layout_constraintTop_toBottomOf="@+id/txMemo" />
 
         <Button
             android:id="@+id/btNeg"
@@ -178,7 +182,7 @@
             android:layout_height="wrap_content"
             android:text="キャンセル"
             app:layout_constraintBottom_toBottomOf="@+id/btPos"
-            app:layout_constraintStart_toStartOf="@+id/editTextTextMultiLine"
+            app:layout_constraintStart_toStartOf="@+id/txMemo"
             app:layout_constraintTop_toTopOf="@+id/btPos"
             app:layout_constraintVertical_bias="0.0" />
 

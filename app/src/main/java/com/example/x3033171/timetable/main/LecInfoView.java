@@ -15,6 +15,7 @@ import com.google.android.material.tabs.TabLayout;
 
 class LecInfoView extends ConstraintLayout {
 
+    private String name, lecCode;
     private TextView lecName;
     private TabLayout tabLayout;
     private MainActivity main;
@@ -44,7 +45,8 @@ class LecInfoView extends ConstraintLayout {
             public void onClick(View v) {
                 MakeTodoDialogFragment fragment = new MakeTodoDialogFragment();
                 Bundle bundle = new Bundle();
-                bundle.putString("name", lecName.getText().toString());
+                bundle.putString("name", name);
+                bundle.putString("lecCode", lecCode);
                 fragment.setArguments(bundle);
                 fragment.show(main.getSupportFragmentManager(), "dialog");
             }
@@ -57,7 +59,20 @@ class LecInfoView extends ConstraintLayout {
     }
 
     void setLecName(String lecName) {
+        name = lecName;
         this.lecName.setText(lecName);
+    }
+
+    public TextView getLecName() {
+        return lecName;
+    }
+
+    public void setLecCode(String lecCode) {
+        this.lecCode = lecCode;
+    }
+
+    public String getLecCode() {
+        return lecCode;
     }
 
     void setMain(MainActivity main) {

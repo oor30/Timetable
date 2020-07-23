@@ -25,6 +25,8 @@ import android.widget.Toast;
 import com.example.x3033171.timetable.Database;
 import com.example.x3033171.timetable.Fun;
 import com.example.x3033171.timetable.R;
+import com.example.x3033171.timetable.main.MakeTodoDialogFragment;
+import com.example.x3033171.timetable.overLecDialog.OverLecDialogFragment;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -173,7 +175,13 @@ public class WebViewActivity extends AppCompatActivity implements View.OnClickLi
         Fun.writeLecInfo(this, resultMaps);
         Set<String> overLecCodes = Fun.checkLecOver(this);
         if (overLecCodes != null) {
-
+            OverLecDialogFragment fragment = new OverLecDialogFragment();
+            Bundle bundle = new Bundle();
+            bundle.putStringArrayList("lecCodes", new ArrayList<>(overLecCodes));
+            fragment.setArguments(bundle);
+            fragment.show(getSupportFragmentManager(), "dialog");
+        } else {
+            Fun.writeLecCodes(this, lecCodes);
         }
 
         // MainActivityに戻る

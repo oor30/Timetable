@@ -2,6 +2,7 @@ package com.example.x3033171.timetable.main;
 
 import android.os.Bundle;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.x3033171.timetable.Fun;
 import com.example.x3033171.timetable.R;
 
 import java.util.ArrayList;
@@ -19,7 +21,8 @@ import java.util.Map;
 
 public class HomeFragment extends Fragment {
 
-    private TextView teacher, room, grade;
+    private ConstraintLayout parent;
+    private TextView teacher, room, grade, memo;
     Button btSetGrade;
 
     @Override
@@ -38,6 +41,10 @@ public class HomeFragment extends Fragment {
                 gdf.show(getChildFragmentManager(), "dialog");
             }
         });
+
+        parent = mInflater.findViewById(R.id.parent);
+        memo = mInflater.findViewById(R.id.memo);
+        Fun.setOutCursorListener(getContext(), memo, parent);
         return mInflater;
     }
 

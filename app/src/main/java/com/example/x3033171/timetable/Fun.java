@@ -2,24 +2,29 @@ package com.example.x3033171.timetable;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-// staticメソッド用クラス
+import static android.content.ContentValues.TAG;
+
+// publicなstaticメソッド用クラス
 public class Fun {
     // 時間割表に表示する講義の履修コードを保存するメソッド：MyLectureActivityの編集後に呼び出される
     public static void writeLecCodes(Context context, Set<String> lecCodes) {
@@ -92,20 +97,32 @@ public class Fun {
         return resultMaps;
     }
 
-    public void writeTodo(Context context, Map<String, String> map) {
+    public static boolean writeTodo(Context context, Map<String, String> todoMap) {
         SharedPreferences preferences = context.getSharedPreferences("pref-todo", Context.MODE_PRIVATE);
-        Gson gson = new Gson();
-        if (map != null) {
-            String lecCode = String.valueOf(map.get("履修コード"));
-            preferences.edit().putString(lecCode, gson.toJson(map)).apply();
+        String lecCode = String.valueOf(todoMap.get("lecCode"));
+        ArrayList<Map<String, String>> todoMaps = readTodo(context, lecCode);
+        for (Map<String, String> map : todoMaps) {
+            if (todoMap.get("title").equals(map.get("title")) || todoMap.get("date").equals(map.get("date"))
+            || todoMap.get("isTask").equals(map.get("isTask"))) {
+                return false;
+            }
         }
+        Gson gson = new Gson();
+        todoMaps.add(todoMap);
+        preferences.edit().putString(lecCode, gson.toJson(todoMaps)).apply();
+        return true;
     }
 
-    public Map<String, String> readTodo(Context context, String lecCode) {
+    public static ArrayList<Map<String, String>> readTodo(Context context, String lecCode) {
         SharedPreferences preferences = context.getSharedPreferences("pref-todo", Context.MODE_PRIVATE);
         Gson gson = new Gson();
-        Type type = new TypeToken<Map<String, Object>>() {}.getType();
-        return gson.fromJson(preferences.getString(lecCode, ""), type);
+        Type type = new TypeToken<ArrayList<Map<String, String>>>() {}.getType();
+        ArrayList<Map<String, String>> todoMaps = gson.fromJson(preferences.getString(lecCode, ""), type);
+        if(todoMaps == null) {
+            return new ArrayList<>();
+        } else {
+            return todoMaps;
+        }
     }
 
     public static void expand(final View v) {
@@ -169,11 +186,14 @@ public class Fun {
                 for (Map<String, Object> value : timeinfo.values()) {
                     String week = String.valueOf(value.get("week"));
                     String period = String.valueOf(value.get("period"));
+                    String weekPeriod = week + period;
+                    Log.d(TAG, "checkLecOver: " + weekPeriod);
                     if (week.equals("null") && period.equals("null")) {
-                        if (weekPeriod_lecCode.containsKey(week + period)) {
-                            weekPeriod_lecCode.get(week + period).add(lecCode);
+                        if (weekPeriod_lecCode.containsKey(weekPeriod)) {
+                            Log.d(TAG, "checkLecOver: " + lecCode);
+                            weekPeriod_lecCode.get(weekPeriod).add(lecCode);
                         } else {
-                            weekPeriod_lecCode.put(week + period, new HashSet<>(Collections.singletonList(lecCode)));
+                            weekPeriod_lecCode.put(weekPeriod, new HashSet<>(Collections.singletonList(lecCode)));
                         }
                     }
                 }
@@ -191,5 +211,21 @@ public class Fun {
         } else {
             return null;
         }
+    }
+
+    public static void setOutCursorListener(final Context context, final TextView textView, final View parent) {
+        textView.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if ((keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_ENTER)
+                        && event.getAction() == KeyEvent.ACTION_UP) {
+                    InputMethodManager manager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    manager.hideSoftInputFromWindow(parent.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+//                    parent.requestFocus();
+                    textView.clearFocus();
+                }
+                return false;
+            }
+        });
     }
 }

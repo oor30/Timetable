@@ -24,6 +24,7 @@ import android.widget.Spinner;
 import com.example.x3033171.timetable.Database;
 import com.example.x3033171.timetable.Fun;
 import com.example.x3033171.timetable.R;
+import com.example.x3033171.timetable.overLecDialog.OverLecDialogFragment;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -45,6 +46,8 @@ public class SearchLectureActivity extends AppCompatActivity implements Navigati
     // レイアウト・サイドメニュー
     private DrawerLayout drawerLayout;
     private RecyclerView recyclerView;
+
+    ResultRecyclerViewAdapter adapter;
 
     // View
     androidx.appcompat.widget.SearchView searchView;
@@ -250,7 +253,7 @@ public class SearchLectureActivity extends AppCompatActivity implements Navigati
             }
             resultArray_.add(new Model(result));
         }
-        ResultRecyclerViewAdapter adapter = new ResultRecyclerViewAdapter();
+        adapter = new ResultRecyclerViewAdapter();
         LinearLayoutManager manager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(manager);
         KmHeaderItemDecoration kmHeaderItemDecoration = new KmHeaderItemDecoration(adapter);
@@ -276,12 +279,28 @@ public class SearchLectureActivity extends AppCompatActivity implements Navigati
             if (v.getId() == R.id.btFinish) {   // 講義編集完了ボタン
                 Log.d("SearchLecture", "onClick: ");
                 ArrayList<Map<String, Object>> resultMaps = new ArrayList<>();
+                Set<String> lecCodes = new HashSet<>();
+
                 for (Result result : resultArray) {
                     if (result.getChecked()) {
                         resultMaps.add(result.getResultMap());
+                        lecCodes.add(result.getLecCode());
                     }
                 }
                 Fun.writeLecInfo(getApplicationContext(), resultMaps);
+
+                Set<String> overLecCodes = Fun.checkLecOver(getApplicationContext());
+                if (overLecCodes != null) {
+                    Log.d("TAG", "onClick: overLecCodes != null");
+                    OverLecDialogFragment fragment = new OverLecDialogFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putStringArrayList("lecCodes", new ArrayList<>(overLecCodes));
+                    fragment.setArguments(bundle);
+                    fragment.show(getSupportFragmentManager(), "dialog");
+                } else {
+                    Log.d("TAG", "onClick: overLecCodes == null");
+                    Fun.writeLecCodes(getApplicationContext(), lecCodes);
+                }
                 finish();
             }
         }

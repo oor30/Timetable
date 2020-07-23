@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/MyTheme">
-        <activity android:name=".myLectures.MyLecturesActivity"></activity>
+        <activity android:name=".Todo.TodoActivity"></activity>
+        <activity android:name=".myLectures.MyLecturesActivity" />
         <activity android:name=".webView.WebViewActivity" />
         <activity android:name=".searchLecture.SearchLectureActivity" />
         <activity android:name=".main.MainActivity">

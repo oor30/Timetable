@@ -187,6 +187,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
                 // 講義の詳細を前面に表示するView "LecInfoView"
                 lecInfoView.setLecName(lec.getLecName());
+                lecInfoView.setLecCode(lec.getLecCode());
                 homeFragment = (HomeFragment) adapter.instantiateItem(pager, 0);
                 homeFragment.setLecture(lec.getResultMap());
                 Log.d("Main#onClick", lec.getLecCode());

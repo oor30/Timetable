@@ -67,12 +67,18 @@ public class ResultRecyclerViewAdapter extends ListAdapter<Model, RecyclerView.V
             addLecCB = itemView.findViewById(R.id.addLecCB);
         }
 
-        public void bind(Model model) {
+        public void bind(final Model model) {
             resWeek.setText(model.grade);
             resPeriod.setText(model.periods.toString().replace("[", "")
                     .replace("]", "") + "限");
             resName.setText(model.name);
             addLecCB.setChecked(model.checked);
+            addLecCB.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    model.setChecked(((CheckBox) v).isChecked());
+                }
+            });
         }
     }
 
