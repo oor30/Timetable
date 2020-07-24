@@ -20,8 +20,9 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.example.x3033171.timetable.Database;
-import com.example.x3033171.timetable.Fun;
+import com.example.x3033171.timetable.CheckLecOver;
+import com.example.x3033171.timetable.LectureDatabase;
+import com.example.x3033171.timetable.LecturePref;
 import com.example.x3033171.timetable.R;
 import com.example.x3033171.timetable.overLecDialog.OverLecDialogFragment;
 import com.google.android.gms.tasks.Task;
@@ -45,7 +46,7 @@ import java.util.Set;
 import static android.content.ContentValues.TAG;
 
 public class WebViewActivity extends AppCompatActivity implements View.OnClickListener,
-        NavigationView.OnNavigationItemSelectedListener {
+        NavigationView.OnNavigationItemSelectedListener, LecturePref, LectureDatabase, CheckLecOver {
 
     private WebView webView;
     private Set<String> lecCodes;
@@ -149,8 +150,9 @@ public class WebViewActivity extends AppCompatActivity implements View.OnClickLi
             }
 
             if (!lecCodes.isEmpty()) {
-                Database database = new Database(this);
-                database.searchLecture(lecCodes);
+//                Database database = new Database(this);
+//                database.searchLecture(lecCodes);
+                searchLecture(lecCodes);
                 return;
             }
         } catch (NullPointerException e) {
@@ -160,7 +162,7 @@ public class WebViewActivity extends AppCompatActivity implements View.OnClickLi
         Toast.makeText(this, "講義が見つかりませんでした", Toast.LENGTH_SHORT).show();
     }
 
-    public void writePref(Task<QuerySnapshot> task) {
+    public void makeResults(Task<QuerySnapshot> task) {
         ArrayList<Map<String, Object>> resultMaps = new ArrayList<>();
         for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
             Map<String, Object> map = document.getData();
@@ -169,20 +171,19 @@ public class WebViewActivity extends AppCompatActivity implements View.OnClickLi
                 resultMaps.add(map);
             }
         }
-        Fun.writeLecInfo(this, resultMaps);
-        Set<String> overLecCodes = Fun.checkLecOver(this);
-        if (overLecCodes != null) {
-            OverLecDialogFragment fragment = new OverLecDialogFragment();
-            Bundle bundle = new Bundle();
-            bundle.putStringArrayList("lecCodes", new ArrayList<>(overLecCodes));
-            fragment.setArguments(bundle);
-            fragment.show(getSupportFragmentManager(), "dialog");
-        } else {
-            Fun.writeLecCodes(this, lecCodes);
-        }
+
+        writeLecInfo(this, resultMaps);
+        Set<String> overLecCodes = checkLecOver(readAllLecInfo(this));
+        OverLecDialogFragment fragment = new OverLecDialogFragment();
+        Bundle bundle = new Bundle();
+        bundle.putStringArrayList("lecCodes", new ArrayList<>(overLecCodes));
+        fragment.setArguments(bundle);
+        fragment.show(getSupportFragmentManager(), "dialog");
 
         // MainActivityに戻る
         progressBar.setVisibility(View.INVISIBLE);
         finish();
     }
+
+
 }

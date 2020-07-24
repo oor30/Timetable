@@ -10,7 +10,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.x3033171.timetable.Fun;
 import com.example.x3033171.timetable.R;
 
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoViewHolder> {
@@ -18,7 +20,7 @@ public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoViewHolder
     private List<TodoData> list;
 
     public TodoRecyclerViewAdapter(List<TodoData> list) {
-        Collections.sort(list, new Fun.TodoDataComparator());
+        Collections.sort(list, new TodoDataComparator());
         this.list = list;
     }
 
@@ -45,5 +47,15 @@ public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoViewHolder
     @Override
     public int getItemCount() {
         return list.size();
+    }
+
+    private static class TodoDataComparator implements Comparator<TodoData> {
+        @Override
+        public int compare(TodoData o1, TodoData o2) {
+            Calendar o1Cal = o1.getCalendar();
+            Calendar o2Cal = o2.getCalendar();
+
+            return o1Cal.compareTo(o2Cal);
+        }
     }
 }

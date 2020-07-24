@@ -18,20 +18,24 @@ import androidx.fragment.app.DialogFragment;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.Transformation;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import com.example.x3033171.timetable.Database;
-import com.example.x3033171.timetable.Fun;
 import com.example.x3033171.timetable.R;
+import com.example.x3033171.timetable.TodoDatabase;
+import com.example.x3033171.timetable.TodoPref;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
@@ -39,7 +43,7 @@ import java.util.Map;
 import java.util.Objects;
 
 
-public class MakeTodoDialogFragment extends DialogFragment {
+public class MakeTodoDialogFragment extends DialogFragment implements TodoPref, TodoDatabase {
     NestedScrollView scrollView;
     String name, lecCode;
     int week;
@@ -98,7 +102,7 @@ public class MakeTodoDialogFragment extends DialogFragment {
         radioGlobal = dialog.findViewById(R.id.radioGlobal);
 
         timeLayout = dialog.findViewById(R.id.timeLayout);
-        Fun.collapse(timeLayout);
+        collapse(timeLayout);
 
         txName = dialog.findViewById(R.id.txName);
         txName.setText(name);
@@ -175,9 +179,9 @@ public class MakeTodoDialogFragment extends DialogFragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    Fun.collapse(timeLayout);
+                    collapse(timeLayout);
                 } else {
-                    Fun.expand(timeLayout);
+                    expand(timeLayout);
                 }
             }
         });
@@ -212,9 +216,9 @@ public class MakeTodoDialogFragment extends DialogFragment {
                     todoMap.put("memo", memo);
                     todoMap.put("isLoacl", isLocal);
 
-                    boolean isSuccess = Fun.writeTodo(Objects.requireNonNull(getContext()), todoMap);
+                    boolean isSuccess = writeTodo(Objects.requireNonNull(getContext()), todoMap);
                     if(isSuccess) {
-                        Database.upTodo(todoMap, lecCode);
+                        upTodo(todoMap, lecCode);
                         ((MainActivity) getContext()).resultFragment.setLecCode(lecCode);
                         dialog.dismiss();
                     } else {
@@ -248,5 +252,67 @@ public class MakeTodoDialogFragment extends DialogFragment {
         });
 
         return dialog;
+    }
+
+    @Override
+    public void OnCreateGlobalTodo(@NotNull Map<String, String> todoMap, String lecCode) {
+        upTodo(todoMap, lecCode);
+    }
+
+    @Override
+    public void OnGetTodoMap(Map<String, String> todoMap) {
+
+    }
+
+    /* Viewの折りたたみに関するメソッド */
+    private static void expand(final View v) {
+        v.measure(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        final int targtetHeight = v.getMeasuredHeight();
+
+        v.getLayoutParams().height = 0;
+        v.setVisibility(View.VISIBLE);
+        Animation a = new Animation()
+        {
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                v.getLayoutParams().height = interpolatedTime == 1
+                        ? LinearLayout.LayoutParams.WRAP_CONTENT
+                        : (int)(targtetHeight * interpolatedTime);
+                v.requestLayout();
+            }
+
+            @Override
+            public boolean willChangeBounds() {
+                return true;
+            }
+        };
+
+        a.setDuration((int)(targtetHeight / v.getContext().getResources().getDisplayMetrics().density));
+        v.startAnimation(a);
+    }
+
+    private static void collapse(final View v) {
+        final int initialHeight = v.getMeasuredHeight();
+
+        Animation a = new Animation()
+        {
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                if(interpolatedTime == 1){
+                    v.setVisibility(View.GONE);
+                }else{
+                    v.getLayoutParams().height = initialHeight - (int)(initialHeight * interpolatedTime);
+                    v.requestLayout();
+                }
+            }
+
+            @Override
+            public boolean willChangeBounds() {
+                return true;
+            }
+        };
+
+        a.setDuration((int)(initialHeight / v.getContext().getResources().getDisplayMetrics().density));
+        v.startAnimation(a);
     }
 }

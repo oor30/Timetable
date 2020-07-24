@@ -11,7 +11,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.example.x3033171.timetable.Fun;
+import com.example.x3033171.timetable.LecturePref;
 import com.example.x3033171.timetable.searchLecture.Model;
 import com.example.x3033171.timetable.R;
 import com.google.android.material.navigation.NavigationView;
@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class MyLecturesActivity extends AppCompatActivity {
+public class MyLecturesActivity extends AppCompatActivity implements LecturePref {
 
     private DrawerLayout drawerLayout;
     private RecyclerView recyclerView;
@@ -83,15 +83,15 @@ public class MyLecturesActivity extends AppCompatActivity {
                 lecCodes.add(model.getLecCode());
             }
         }
-        Fun.writeLecCodes(this, lecCodes);
+        writeLecCodes(this, lecCodes);
     }
 
     private List<Model> readMyLec() {
-        Set<String> lecCodes = Fun.readLecCodes(this);
+        Set<String> lecCodes = readLecCodes(this);
         List<Model> dataset = new ArrayList<>();
 
         if (lecCodes != null) {
-            ArrayList<Map<String, Object>> resultMaps = Fun.readAllLecInfo(this);
+            ArrayList<Map<String, Object>> resultMaps = readAllLecInfo(this);
             for (Map<String, Object> resultMap : resultMaps) {
                 if (lecCodes.contains(String.valueOf(resultMap.get("履修コード")))) {
                     dataset.add(new Model(resultMap, true));

@@ -1,14 +1,17 @@
 package com.example.x3033171.timetable.main;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -44,7 +47,7 @@ public class HomeFragment extends Fragment {
 
         parent = mInflater.findViewById(R.id.parent);
         memo = mInflater.findViewById(R.id.memo);
-        Fun.setOutCursorListener(getContext(), memo, parent);
+        setOutCursorListener(getContext(), memo, parent);
         return mInflater;
     }
 
@@ -65,5 +68,21 @@ public class HomeFragment extends Fragment {
             }
             room.setText(rooms.toString().replace("[", "").replace("]", ""));
         }
+    }
+
+    private static void setOutCursorListener(final Context context, final TextView textView, final View parent) {
+        textView.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if ((keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_ENTER)
+                        && event.getAction() == KeyEvent.ACTION_UP) {
+                    InputMethodManager manager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    manager.hideSoftInputFromWindow(parent.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+//                    parent.requestFocus();
+                    textView.clearFocus();
+                }
+                return false;
+            }
+        });
     }
 }

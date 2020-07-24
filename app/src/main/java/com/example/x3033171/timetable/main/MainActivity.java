@@ -16,9 +16,10 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.example.x3033171.timetable.Database;
-import com.example.x3033171.timetable.Fun;
+import com.example.x3033171.timetable.LecturePref;
 import com.example.x3033171.timetable.Todo.TodoActivity;
+import com.example.x3033171.timetable.TodoDatabase;
+import com.example.x3033171.timetable.TodoPref;
 import com.example.x3033171.timetable.searchLecture.Lecture;
 import com.example.x3033171.timetable.myLectures.MyLecturesActivity;
 import com.example.x3033171.timetable.R;
@@ -27,15 +28,16 @@ import com.example.x3033171.timetable.webView.WebViewActivity;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.navigation.NavigationView;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
-import java.util.prefs.Preferences;
 
-import static com.example.x3033171.timetable.Fun.readAllTodo;
-import static com.example.x3033171.timetable.Fun.readLecCodes;
+import static android.content.ContentValues.TAG;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
+        LecturePref, TodoPref, TodoDatabase {
 
     private DrawerLayout drawerLayout;
     private Lecture[][] lectures;
@@ -133,11 +135,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             preferences.edit().clear().apply();
         }
 
-        Set<String> lecCodes = Fun.readLecCodes(this);
-        if (lecCodes != null) {
-            for (String lecCode : lecCodes) {
-                Database.subsSnapshotListener(this, lecCode);
-            }
+        Set<String> lecCodes = readLecCodes(this);
+        for (String lecCode : lecCodes) {
+            subsSnapshotListener(this, lecCode);
         }
     }
 
@@ -157,7 +157,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // 時間割を設定
         Set<String> lecCodes = readLecCodes(this);
-        ArrayList<Map<String, Object>> resultMaps = Fun.readLecInfo(this, lecCodes);
+        ArrayList<Map<String, Object>> resultMaps = readLecInfo(this, lecCodes);
         for (Map<String, Object> resultMap : resultMaps) {
             setLecture(resultMap);
         }
@@ -254,5 +254,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void OnGetTodoMap(Map<String, String> todoMap) {
+        boolean wrote = writeTodo(this, todoMap);
+        if (wrote) {
+            Log.d(TAG, "課題を追加：" + todoMap);
+        } else {
+            Log.d(TAG, "課題がすでに存在しています：" + todoMap);
+        }
+    }
+
+    @Override
+    public void OnCreateGlobalTodo(@NotNull Map<String, String> todoMap, String lecCode) {
+        upTodo(todoMap, lecCode);
     }
 }

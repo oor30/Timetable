@@ -10,7 +10,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.x3033171.timetable.Fun;
+import com.example.x3033171.timetable.LecturePref;
 import com.example.x3033171.timetable.R;
 import com.example.x3033171.timetable.myLectures.MyLecRecyclerViewAdapter;
 import com.example.x3033171.timetable.searchLecture.Model;
@@ -21,7 +21,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-public class OverLecDialogFragment extends DialogFragment {
+public class OverLecDialogFragment extends DialogFragment implements LecturePref {
     RecyclerView recyclerView;
     MyLecRecyclerViewAdapter adapter;
 
@@ -47,7 +47,7 @@ public class OverLecDialogFragment extends DialogFragment {
 
     private List<Model> readMyLec(ArrayList<String> lecCodes) {
         List<Model> dataset = new ArrayList<>();
-        ArrayList<Map<String, Object>> resultMaps = Fun.readLecInfo(getContext(), new HashSet<>(lecCodes));
+        ArrayList<Map<String, Object>> resultMaps = readLecInfo(getContext(), new HashSet<>(lecCodes));
         for (Map<String, Object> resultMap : resultMaps) {
             if (lecCodes.contains(String.valueOf(resultMap.get("履修コード")))) {
                 dataset.add(new Model(resultMap, true));

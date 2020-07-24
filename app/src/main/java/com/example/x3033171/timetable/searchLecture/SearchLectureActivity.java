@@ -21,8 +21,9 @@ import android.widget.CheckBox;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 
-import com.example.x3033171.timetable.Database;
-import com.example.x3033171.timetable.Fun;
+import com.example.x3033171.timetable.CheckLecOver;
+import com.example.x3033171.timetable.LectureDatabase;
+import com.example.x3033171.timetable.LecturePref;
 import com.example.x3033171.timetable.R;
 import com.example.x3033171.timetable.overLecDialog.OverLecDialogFragment;
 import com.google.android.gms.tasks.Task;
@@ -41,7 +42,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-public class SearchLectureActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class SearchLectureActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
+        LecturePref, LectureDatabase, CheckLecOver {
     // フィールド変数
     // レイアウト・サイドメニュー
     private DrawerLayout drawerLayout;
@@ -61,7 +63,7 @@ public class SearchLectureActivity extends AppCompatActivity implements Navigati
     String name, faculty, department, course;
     ArrayList<String> bunrui;
     ArrayList<Result> resultArray;
-    Database database;
+//    Database database;
     Set<String> selectedLecCode;
 
     @Override
@@ -142,8 +144,8 @@ public class SearchLectureActivity extends AppCompatActivity implements Navigati
         progressBar.setVisibility(View.VISIBLE);
 
         // データベース
-        database = new Database(this);
-        database.searchLecture(spnFaculty.getSelectedItem().toString());
+//        database = new Database(this);
+        searchLecture(spnFaculty.getSelectedItem().toString());
     }
 
     public static int convertDp2Px(float dp, Context context){
@@ -161,9 +163,10 @@ public class SearchLectureActivity extends AppCompatActivity implements Navigati
     }
 
     // データベースで検索後、呼び出されるメソッド
+    @Override
     public void makeResults(Task<QuerySnapshot> task) {
         // 選択済みの教科を共有プリファレンスから取得
-        Set<String> lecCodes = Fun.readAllLecCodes(this);
+        Set<String> lecCodes = readAllLecCodes(this);
 
         // ドキュメントからResultインスタンスを作成・resultArray(ArrayList)に保存
         Log.d("SearchLecture", "結果を追加中");
@@ -287,9 +290,9 @@ public class SearchLectureActivity extends AppCompatActivity implements Navigati
                         lecCodes.add(result.getLecCode());
                     }
                 }
-                Fun.writeLecInfo(getApplicationContext(), resultMaps);
+                writeLecInfo(getApplicationContext(), resultMaps);
 
-                Set<String> overLecCodes = Fun.checkLecOver(getApplicationContext());
+                Set<String> overLecCodes = checkLecOver(readAllLecInfo(getApplicationContext()));
                 if (overLecCodes != null) {
                     Log.d("TAG", "onClick: overLecCodes != null");
                     OverLecDialogFragment fragment = new OverLecDialogFragment();
@@ -299,7 +302,7 @@ public class SearchLectureActivity extends AppCompatActivity implements Navigati
                     fragment.show(getSupportFragmentManager(), "dialog");
                 } else {
                     Log.d("TAG", "onClick: overLecCodes == null");
-                    Fun.writeLecCodes(getApplicationContext(), lecCodes);
+                    writeLecCodes(getApplicationContext(), lecCodes);
                 }
                 finish();
             }
@@ -330,7 +333,7 @@ public class SearchLectureActivity extends AppCompatActivity implements Navigati
 //                }
                 bunrui.set(5, faculty);
                 progressBar.setVisibility(View.VISIBLE);
-                database.searchLecture(faculty);
+                searchLecture(faculty);
                 return;
             }
             else if (parent == spnDepartment) {     // 学科（不可視）

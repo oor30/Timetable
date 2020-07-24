@@ -17,6 +17,7 @@ import com.example.x3033171.timetable.Fun;
 import com.example.x3033171.timetable.R;
 import com.example.x3033171.timetable.Todo.TodoData;
 import com.example.x3033171.timetable.Todo.TodoRecyclerViewAdapter;
+import com.example.x3033171.timetable.TodoPref;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +26,7 @@ import java.util.Map;
 import static android.content.ContentValues.TAG;
 
 
-public class ResultFragment extends Fragment {
+public class ResultFragment extends Fragment implements TodoPref {
 
     private RecyclerView recyclerView;
     private TextView messege;
@@ -50,7 +51,7 @@ public class ResultFragment extends Fragment {
 
     public void setLecCode(String lecCode) {
         List<TodoData> dataList = new ArrayList<>();
-        ArrayList<Map<String, String>> maps = Fun.readTodo(getContext(), lecCode);
+        ArrayList<Map<String, String>> maps = readTodo(getContext(), lecCode);
         for (Map<String, String> map : maps) {
             dataList.add(new TodoData(map));
         }
