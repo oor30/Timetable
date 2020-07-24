@@ -2,7 +2,6 @@ package com.example.x3033171.timetable;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -16,6 +15,8 @@ import com.example.x3033171.timetable.Todo.TodoData;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -24,6 +25,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import static android.content.ContentValues.TAG;
@@ -57,12 +59,18 @@ public class Fun {
     }
 
     // 時間割表に表示する講義の履修コードを返すメソッド：MainActivityから呼び出される
+    @NotNull
     public static Set<String> readLecCodes(Context context) {
         SharedPreferences preferences = context.getSharedPreferences("pref-lecCodes", Context.MODE_PRIVATE);
-        return preferences.getStringSet("lecCodes", null);
+        Set<String> lecCodes = preferences.getStringSet("lecCodes", null);
+        if (lecCodes == null) {
+            return new HashSet<>();
+        }
+        return lecCodes;
     }
 
     // 履修コードから講義情報を返すメソッド：MainActivityから呼び出される
+    @NotNull
     public static ArrayList<Map<String, Object>> readLecInfo(Context context, Set<String> lecCodes) {
         ArrayList<Map<String, Object>> resultMaps = new ArrayList<>();
 
@@ -79,12 +87,18 @@ public class Fun {
     }
 
     // My講義に登録した講義の履修コードを返すメソッド：SearchLectureから呼び出される
+    @NotNull
     public static Set<String> readAllLecCodes(Context context) {
         SharedPreferences preferences = context.getSharedPreferences("pref-lecInfo", Context.MODE_PRIVATE);
-        return preferences.getStringSet("allLecCodes", null);
+        Set<String> lecCodes = preferences.getStringSet("allLecCodes", null);
+        if (lecCodes == null) {
+            return new HashSet<>();
+        }
+        return lecCodes;
     }
 
     // My講義に登録した講義情報を返すメソッド：MyLectureActivityから呼び出される
+    @NotNull
     public static ArrayList<Map<String, Object>> readAllLecInfo(Context context) {
         ArrayList<Map<String, Object>> resultMaps = new ArrayList<>();
 
@@ -111,8 +125,7 @@ public class Fun {
         String lecCode = String.valueOf(todoMap.get("lecCode"));
         ArrayList<Map<String, String>> todoMaps = readTodo(context, lecCode);
         for (Map<String, String> map : todoMaps) {
-            if (todoMap.get("title").equals(map.get("title")) && todoMap.get("date").equals(map.get("date"))
-            && todoMap.get("isTask").equals(map.get("isTask"))) {
+            if (Objects.equals(todoMap.get("id"), map.get("id"))) {
                 return false;
             }
         }
@@ -120,10 +133,13 @@ public class Fun {
         todoMaps.add(todoMap);
         preferences.edit().putString(lecCode, gson.toJson(todoMaps)).apply();
 
-        Database.upTodo(todoMap, lecCode);
+        if (Objects.equals(todoMap.get("isLocal"), "false")) {
+            Database.upTodo(todoMap, lecCode);
+        }
         return true;
     }
 
+    @NotNull
     public static ArrayList<Map<String, String>> readTodo(Context context, String lecCode) {
         SharedPreferences preferences = context.getSharedPreferences("pref-todo", Context.MODE_PRIVATE);
         Gson gson = new Gson();
@@ -131,11 +147,11 @@ public class Fun {
         ArrayList<Map<String, String>> todoMaps = gson.fromJson(preferences.getString(lecCode, ""), type);
         if(todoMaps == null) {
             return new ArrayList<>();
-        } else {
-            return todoMaps;
         }
+        return todoMaps;
     }
 
+    @NotNull
     public static ArrayList<ArrayList<Map<String, String>>> readAllTodo(Context context) {
         Set<String> lecCodes = readAllLecCodes(context);
         ArrayList<ArrayList<Map<String, String>>> allTodo = new ArrayList<>();
@@ -215,6 +231,7 @@ public class Fun {
 
 
     // 同一コマに講義が重複していないかチェックするメソッド
+    @NotNull
     public static Set<String> checkLecOver(Context context) {
         ArrayList<Map<String, Object>> resultMaps = readAllLecInfo(context);
         Map<String, Set<String>> weekPeriod_lecCode = new HashMap<>();
@@ -245,11 +262,7 @@ public class Fun {
                 overLecCodes.addAll(value);
             }
         }
-        if (overLecCodes.size() > 0) {
-            return overLecCodes;
-        } else {
-            return null;
-        }
+        return overLecCodes;
     }
 
     public static void setOutCursorListener(final Context context, final TextView textView, final View parent) {

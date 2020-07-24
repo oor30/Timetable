@@ -7,6 +7,9 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -27,6 +30,7 @@ import com.google.android.material.navigation.NavigationView;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
+import java.util.prefs.Preferences;
 
 import static com.example.x3033171.timetable.Fun.readAllTodo;
 import static com.example.x3033171.timetable.Fun.readLecCodes;
@@ -110,9 +114,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         behavior = BottomSheetBehavior.from(lecInfoView);
         behavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
+        SharedPreferences preferences = getSharedPreferences("pref-version", MODE_PRIVATE);
+        int oldVer = preferences.getInt("version", 0);
+        PackageManager pm = getPackageManager();
+        try {
+            PackageInfo pi = pm.getPackageInfo(getPackageName(), 0);
+            int newVer = pi.versionCode;
+            preferences.edit().putInt("version", newVer).apply();
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        if (oldVer < 1) {
+            preferences = getSharedPreferences("pref-todo", MODE_PRIVATE);
+            preferences.edit().clear().apply();
+            preferences = getSharedPreferences("pref-lecInfo", MODE_PRIVATE);
+            preferences.edit().clear().apply();
+            preferences = getSharedPreferences("pref-lecCodes", MODE_PRIVATE);
+            preferences.edit().clear().apply();
+        }
+
         Set<String> lecCodes = Fun.readLecCodes(this);
-        for (String lecCode : lecCodes) {
-            Database.subsSnapshotListener(this, lecCode);
+        if (lecCodes != null) {
+            for (String lecCode : lecCodes) {
+                Database.subsSnapshotListener(this, lecCode);
+            }
         }
     }
 
@@ -199,7 +224,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         }
                     }
                 }
-                setLecInfoView(lec);
+                setLecInfoView(lec, week);
             }
             else {
                 behavior.setState(BottomSheetBehavior.STATE_HIDDEN);
@@ -207,10 +232,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     };
 
-    public void setLecInfoView(Lecture lec) {
+    public void setLecInfoView(Lecture lec, int week) {
         // 講義の詳細を前面に表示するView "LecInfoView"
         lecInfoView.setLecName(lec.getLecName());
         lecInfoView.setLecCode(lec.getLecCode());
+        lecInfoView.setWeek(week);
         homeFragment = (HomeFragment) adapter.instantiateItem(pager, 0);
         homeFragment.setLecture(lec.getResultMap());
         resultFragment = (ResultFragment) adapter.instantiateItem(pager, 1);

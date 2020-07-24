@@ -16,6 +16,7 @@ import com.google.android.material.tabs.TabLayout;
 class LecInfoView extends ConstraintLayout {
 
     private String name, lecCode;
+    int week;
     private TextView lecName;
     private TabLayout tabLayout;
     private MainActivity main;
@@ -47,6 +48,7 @@ class LecInfoView extends ConstraintLayout {
                 Bundle bundle = new Bundle();
                 bundle.putString("name", name);
                 bundle.putString("lecCode", lecCode);
+                bundle.putInt("week", week);
                 fragment.setArguments(bundle);
                 fragment.show(main.getSupportFragmentManager(), "dialog");
             }
@@ -73,6 +75,10 @@ class LecInfoView extends ConstraintLayout {
 
     public String getLecCode() {
         return lecCode;
+    }
+
+    public void setWeek(int week) {
+        this.week = week;
     }
 
     void setMain(MainActivity main) {

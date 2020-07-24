@@ -52,7 +52,8 @@
                 android:button="@null"
                 android:gravity="center"
                 android:text="課題"
-                android:textColor="@color/white_gray" />
+                android:textColor="@color/white_gray"
+                android:textStyle="bold" />
 
             <RadioButton
                 android:id="@+id/radioExam"
@@ -63,7 +64,8 @@
                 android:button="@null"
                 android:gravity="center"
                 android:text="試験"
-                android:textColor="@color/white_gray" />
+                android:textColor="@color/white_gray"
+                android:textStyle="bold" />
         </RadioGroup>
 
         <TextView
@@ -163,6 +165,31 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/timeLayout" />
 
+        <RadioGroup
+            android:id="@+id/radioGroup2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:checkedButton="@id/radioLocal"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="@+id/btPos"
+            app:layout_constraintTop_toBottomOf="@+id/txMemo">
+
+            <RadioButton
+                android:id="@+id/radioLocal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/radio_local_back"
+                android:button="@null" />
+
+            <RadioButton
+                android:id="@+id/radioGlobal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/radio_global_back"
+                android:button="@null" />
+        </RadioGroup>
+
         <Button
             android:id="@+id/btPos"
             style="@style/Widget.AppCompat.Button.Colored"
@@ -173,7 +200,7 @@
             android:text="作成"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/txMemo"
-            app:layout_constraintTop_toBottomOf="@+id/txMemo" />
+            app:layout_constraintTop_toBottomOf="@+id/radioGroup2" />
 
         <Button
             android:id="@+id/btNeg"

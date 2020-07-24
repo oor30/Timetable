@@ -42,8 +42,9 @@ import java.util.Objects;
 public class MakeTodoDialogFragment extends DialogFragment {
     NestedScrollView scrollView;
     String name, lecCode;
-    RadioGroup radioGroup;
-    RadioButton radioTask, radioExam;
+    int week;
+    RadioGroup radioGroup, radioGroup2;
+    RadioButton radioTask, radioExam, radioLocal, radioGlobal;
     TextView txName, txTitle, txDate, txTime, txMemo;
     Switch aSwitch;
     ConstraintLayout timeLayout;
@@ -56,6 +57,7 @@ public class MakeTodoDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         name = getArguments().getString("name");
         lecCode = getArguments().getString("lecCode");
+        week = getArguments().getInt("week");
 
         final Dialog dialog = new Dialog(getActivity());
         dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
@@ -90,6 +92,11 @@ public class MakeTodoDialogFragment extends DialogFragment {
                 colorAnimation.start();
             }
         });
+
+        radioGroup2 = dialog.findViewById(R.id.radioGroup2);
+        radioLocal = dialog.findViewById(R.id.radioLocal);
+        radioGlobal = dialog.findViewById(R.id.radioGlobal);
+
         timeLayout = dialog.findViewById(R.id.timeLayout);
         Fun.collapse(timeLayout);
 
@@ -101,7 +108,10 @@ public class MakeTodoDialogFragment extends DialogFragment {
 
         Log.d("calender", "getInstance()");
         calendar = Calendar.getInstance();
-        calendar.add(Calendar.DATE, 7);
+        calendar.set(Calendar.DAY_OF_WEEK, week + 2);
+        if (calendar.before(Calendar.getInstance())) {
+            calendar.add(Calendar.DATE, 7);
+        }
         calendar.set(Calendar.HOUR_OF_DAY, 17);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
@@ -128,6 +138,8 @@ public class MakeTodoDialogFragment extends DialogFragment {
                         calendar.get(Calendar.DATE)
                 );
 
+                DatePicker datePicker = datePickerDialog.getDatePicker();
+                datePicker.setMinDate(Calendar.getInstance().getTimeInMillis());
                 //dialogを表示
                 datePickerDialog.show();
             }
@@ -175,31 +187,33 @@ public class MakeTodoDialogFragment extends DialogFragment {
         dialog.findViewById(R.id.btPos).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (txTitle.getText().length() > 0) {
+                Calendar now = Calendar.getInstance();
+
+                if (txTitle.getText().length() > 0 && calendar.after(now)) {
                     Map<String, String> todoMap = new HashMap<>();
                     String isTask = String.valueOf(radioTask.isChecked());
                     String title = txTitle.getText().toString();
-//                    String date = txDate.getText().toString();
                     String isAllDay = String.valueOf(aSwitch.isChecked());
-                    String time = txTime.getText().toString();
                     String memo = txMemo.getText().toString();
+                    String isLocal = String.valueOf(radioLocal.isChecked());
 
                     SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm", Locale.getDefault());
                     String date = format.format(calendar.getTime());
 
+
+
+                    todoMap.put("id", title + date);
                     todoMap.put("name", name);
                     todoMap.put("lecCode", lecCode);
                     todoMap.put("isTask", isTask);
                     todoMap.put("title", title);
                     todoMap.put("date", date);
                     todoMap.put("isAllDay", isAllDay);
-                    todoMap.put("time", time);
                     todoMap.put("memo", memo);
+                    todoMap.put("isLoacl", isLocal);
 
                     boolean isSuccess = Fun.writeTodo(Objects.requireNonNull(getContext()), todoMap);
                     if(isSuccess) {
-                        ArrayList<Map<String, String>> todoMaps = new ArrayList<>();
-                        todoMaps.add(todoMap);
                         Database.upTodo(todoMap, lecCode);
                         ((MainActivity) getContext()).resultFragment.setLecCode(lecCode);
                         dialog.dismiss();
