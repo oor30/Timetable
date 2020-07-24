@@ -2,6 +2,7 @@ package com.example.x3033171.timetable;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -11,12 +12,15 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.x3033171.timetable.Todo.TodoData;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -26,6 +30,8 @@ import static android.content.ContentValues.TAG;
 
 // publicなstaticメソッド用クラス
 public class Fun {
+
+    /* 講義情報・履修コードの保存・読み込みに関するメソッド */
     // 時間割表に表示する講義の履修コードを保存するメソッド：MyLectureActivityの編集後に呼び出される
     public static void writeLecCodes(Context context, Set<String> lecCodes) {
         SharedPreferences preferences = context.getSharedPreferences("pref-lecCodes", Context.MODE_PRIVATE);
@@ -97,19 +103,24 @@ public class Fun {
         return resultMaps;
     }
 
+
+
+    /* Todoに関するメソッド */
     public static boolean writeTodo(Context context, Map<String, String> todoMap) {
         SharedPreferences preferences = context.getSharedPreferences("pref-todo", Context.MODE_PRIVATE);
         String lecCode = String.valueOf(todoMap.get("lecCode"));
         ArrayList<Map<String, String>> todoMaps = readTodo(context, lecCode);
         for (Map<String, String> map : todoMaps) {
-            if (todoMap.get("title").equals(map.get("title")) || todoMap.get("date").equals(map.get("date"))
-            || todoMap.get("isTask").equals(map.get("isTask"))) {
+            if (todoMap.get("title").equals(map.get("title")) && todoMap.get("date").equals(map.get("date"))
+            && todoMap.get("isTask").equals(map.get("isTask"))) {
                 return false;
             }
         }
         Gson gson = new Gson();
         todoMaps.add(todoMap);
         preferences.edit().putString(lecCode, gson.toJson(todoMaps)).apply();
+
+        Database.upTodo(todoMap, lecCode);
         return true;
     }
 
@@ -125,6 +136,31 @@ public class Fun {
         }
     }
 
+    public static ArrayList<ArrayList<Map<String, String>>> readAllTodo(Context context) {
+        Set<String> lecCodes = readAllLecCodes(context);
+        ArrayList<ArrayList<Map<String, String>>> allTodo = new ArrayList<>();
+        for (String lecCode : lecCodes) {
+            for (Map<String, String> map : readTodo(context, lecCode)) {
+                Database.upTodo(map, lecCode);
+            }
+            allTodo.add(readTodo(context, lecCode));
+        }
+        return allTodo;
+    }
+
+    public static class TodoDataComparator implements Comparator<TodoData> {
+        @Override
+        public int compare(TodoData o1, TodoData o2) {
+            Calendar o1Cal = o1.getCalendar();
+            Calendar o2Cal = o2.getCalendar();
+
+            return o1Cal.compareTo(o2Cal);
+        }
+    }
+
+
+
+    /* Viewの折りたたみに関するメソッド */
     public static void expand(final View v) {
         v.measure(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         final int targtetHeight = v.getMeasuredHeight();
@@ -176,6 +212,9 @@ public class Fun {
         v.startAnimation(a);
     }
 
+
+
+    // 同一コマに講義が重複していないかチェックするメソッド
     public static Set<String> checkLecOver(Context context) {
         ArrayList<Map<String, Object>> resultMaps = readAllLecInfo(context);
         Map<String, Set<String>> weekPeriod_lecCode = new HashMap<>();

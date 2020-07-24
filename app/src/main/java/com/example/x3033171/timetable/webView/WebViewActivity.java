@@ -7,8 +7,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,13 +23,11 @@ import android.widget.Toast;
 import com.example.x3033171.timetable.Database;
 import com.example.x3033171.timetable.Fun;
 import com.example.x3033171.timetable.R;
-import com.example.x3033171.timetable.main.MakeTodoDialogFragment;
 import com.example.x3033171.timetable.overLecDialog.OverLecDialogFragment;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.gson.Gson;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -48,7 +44,8 @@ import java.util.Set;
 
 import static android.content.ContentValues.TAG;
 
-public class WebViewActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
+public class WebViewActivity extends AppCompatActivity implements View.OnClickListener,
+        NavigationView.OnNavigationItemSelectedListener {
 
     private WebView webView;
     private Set<String> lecCodes;
@@ -68,7 +65,7 @@ public class WebViewActivity extends AppCompatActivity implements View.OnClickLi
         progressBar = findViewById(R.id.progressBar2);
         progressBar.setVisibility(View.INVISIBLE);
 
-        drawerLayout = findViewById(R.id.drawerLayout3);
+        drawerLayout = findViewById(R.id.drawerLayout);
         navigationView = findViewById(R.id.navigationView3);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.readHtml);   // メニューの時間割を選択済みに

@@ -37,7 +37,7 @@ class LecInfoView extends ConstraintLayout {
 
     private void init(Context context) {
         LayoutInflater.from(context).inflate(R.layout.lec_info_view, this);
-        lecName = findViewById(R.id.lecName);
+        lecName = findViewById(R.id.name);
         tabLayout = findViewById(R.id.tabLayout);
         Button btMakeTodo = findViewById(R.id.btMakeTodo);
         btMakeTodo.setOnClickListener(new View.OnClickListener() {

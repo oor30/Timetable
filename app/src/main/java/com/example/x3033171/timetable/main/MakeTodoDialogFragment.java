@@ -15,24 +15,24 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.DialogFragment;
 
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.example.x3033171.timetable.Database;
 import com.example.x3033171.timetable.Fun;
 import com.example.x3033171.timetable.R;
 
-import java.sql.Time;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -47,6 +47,9 @@ public class MakeTodoDialogFragment extends DialogFragment {
     TextView txName, txTitle, txDate, txTime, txMemo;
     Switch aSwitch;
     ConstraintLayout timeLayout;
+
+    private Calendar calendar;
+    SimpleDateFormat dateFormat, timeFormat;
 
     @NonNull
     @Override
@@ -95,15 +98,20 @@ public class MakeTodoDialogFragment extends DialogFragment {
 
         txTitle = dialog.findViewById(R.id.txTitle);
         txDate = dialog.findViewById(R.id.date);
-        Date date = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy / MM / dd", Locale.getDefault());
-        txDate.setText(sdf.format(date));
+
+        Log.d("calender", "getInstance()");
+        calendar = Calendar.getInstance();
+        calendar.add(Calendar.DATE, 7);
+        calendar.set(Calendar.HOUR_OF_DAY, 17);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        dateFormat = new SimpleDateFormat("M/d E", Locale.getDefault());
+        txDate.setText(dateFormat.format(calendar.getTime()));
+
         txDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Calendarインスタンスを取得
-                final Calendar date = Calendar.getInstance();
-
                 //DatePickerDialogインスタンスを取得
                 DatePickerDialog datePickerDialog = new DatePickerDialog(
                         getContext(),
@@ -111,12 +119,13 @@ public class MakeTodoDialogFragment extends DialogFragment {
                             @Override
                             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                                 //setした日付を取得して表示
-                                txDate.setText(String.format("%d / %02d / %02d", year, month+1, dayOfMonth));
+                                calendar.set(year, month, dayOfMonth);
+                                txDate.setText(dateFormat.format(calendar.getTime()));
                             }
                         },
-                        date.get(Calendar.YEAR),
-                        date.get(Calendar.MONTH),
-                        date.get(Calendar.DATE)
+                        calendar.get(Calendar.YEAR),
+                        calendar.get(Calendar.MONTH),
+                        calendar.get(Calendar.DATE)
                 );
 
                 //dialogを表示
@@ -125,23 +134,23 @@ public class MakeTodoDialogFragment extends DialogFragment {
         });
 
         txTime = dialog.findViewById(R.id.txTime);
-        sdf = new SimpleDateFormat("hh : mm", Locale.getDefault());
-        txTime.setText(sdf.format(date));
+        timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        txTime.setText(timeFormat.format(calendar.getTime()));
         txTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Calendar date = Calendar.getInstance();
-
                 TimePickerDialog timePickerDialog = new TimePickerDialog(
                         getContext(),
                         new TimePickerDialog.OnTimeSetListener() {
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                txTime.setText(String.format("%d : %02d" , hourOfDay, minute));
+                                calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                                calendar.set(Calendar.MINUTE, minute);
+                                txTime.setText(timeFormat.format(calendar.getTime()));
                             }
                         },
-                        date.get(Calendar.HOUR),
-                        date.get(Calendar.MINUTE),
+                        calendar.get(Calendar.HOUR_OF_DAY),
+                        calendar.get(Calendar.MINUTE),
                         true
                 );
                 timePickerDialog.show();
@@ -170,11 +179,15 @@ public class MakeTodoDialogFragment extends DialogFragment {
                     Map<String, String> todoMap = new HashMap<>();
                     String isTask = String.valueOf(radioTask.isChecked());
                     String title = txTitle.getText().toString();
-                    String date = txDate.getText().toString();
+//                    String date = txDate.getText().toString();
                     String isAllDay = String.valueOf(aSwitch.isChecked());
                     String time = txTime.getText().toString();
                     String memo = txMemo.getText().toString();
 
+                    SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm", Locale.getDefault());
+                    String date = format.format(calendar.getTime());
+
+                    todoMap.put("name", name);
                     todoMap.put("lecCode", lecCode);
                     todoMap.put("isTask", isTask);
                     todoMap.put("title", title);
@@ -185,6 +198,10 @@ public class MakeTodoDialogFragment extends DialogFragment {
 
                     boolean isSuccess = Fun.writeTodo(Objects.requireNonNull(getContext()), todoMap);
                     if(isSuccess) {
+                        ArrayList<Map<String, String>> todoMaps = new ArrayList<>();
+                        todoMaps.add(todoMap);
+                        Database.upTodo(todoMap, lecCode);
+                        ((MainActivity) getContext()).resultFragment.setLecCode(lecCode);
                         dialog.dismiss();
                     } else {
                         String selectedRadio;

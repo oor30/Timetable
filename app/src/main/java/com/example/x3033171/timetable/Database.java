@@ -1,21 +1,35 @@
 package com.example.x3033171.timetable;
 
+import android.content.Context;
 import android.util.Log;
+import android.webkit.WebView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.example.x3033171.timetable.searchLecture.SearchLectureActivity;
 import com.example.x3033171.timetable.webView.WebViewActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import static android.content.ContentValues.TAG;
+import static com.example.x3033171.timetable.Fun.writeTodo;
 
 public class Database {
     FirebaseFirestore db;
@@ -30,6 +44,63 @@ public class Database {
     public Database(WebViewActivity wv) {
         db = FirebaseFirestore.getInstance();
         this.wv = wv;
+    }
+
+    public static void upTodo(Map<String, String> todoMap, String lecCode) {
+        Map<String, Map<String, String>> map = new HashMap<>();
+        String id = todoMap.get("title") + todoMap.get("date");
+        map.put(id, todoMap);
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference cr = db.collection("todo");
+        cr.document(lecCode)
+                .set(map, SetOptions.merge())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully written!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error writing document", e);
+                    }
+                });
+    }
+
+    public static void subsSnapshotListener(final Context context, String lecCode) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("todo").document(lecCode)
+                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                        if (error != null) {
+                            Log.w(TAG, "Listen failed.", error);
+                            return;
+                        }
+
+                        if (value != null && value.exists()) {
+                            Map<String, Object> map = value.getData();
+                            for (Object o : map.values()) {
+                                Map<String, String> todoMap = ((Map<String, String>) o);
+                                boolean wrote = Fun.writeTodo(context, todoMap);
+                                if (wrote) {
+                                    Log.d(TAG, "課題を追加：" + todoMap);
+                                } else {
+                                    Log.d(TAG, "課題がすでに存在しています：" + todoMap);
+                                }
+                            }
+                        } else {
+                            Log.d(TAG, "Current data: null");
+                        }
+                    }
+                });
+    }
+
+    public void downTodo() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("todo");
     }
 
     public void searchLecture(Set<String> lecCodes) {
