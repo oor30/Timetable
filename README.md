@@ -6,8 +6,10 @@ Android Studioのプロジェクト。<br>
 
 ## アプリ概要
 岐阜大学生の時間割を一瞬で作成するAndroidアプリです。<br>
-アプリから岐阜大学生ポータルサイトにログインすると、時間割表のHTMLを解析して取得します。
+アプリから岐阜大学生ポータルサイトにログインすると、時間割表のHTMLを解析して取得します。<br>
+※下のデモ画像では、ログイン画面を省略しています。
 
+<img width="210" alt="時間割アプリデモ" src="https://github.com/oor30/Timetable/assets/66106684/eac89846-dd32-40c6-8596-bd14f3db5913">
 <img width="194" alt="スクリーンショット 2024-07-08 0 13 39" src="https://github.com/oor30/Timetable/assets/66106684/a71fa09e-ae75-43f3-b9f9-fcabdd72e8b3">
 <img width="194" alt="スクリーンショット 2024-07-08 0 54 16" src="https://github.com/oor30/Timetable/assets/66106684/87137d20-c068-43cd-a91b-1e767a784746">
 <img width="194" alt="スクリーンショット 2024-07-08 0 16 18" src="https://github.com/oor30/Timetable/assets/66106684/85d0f167-f282-485f-ba62-8108df033266">
@@ -15,6 +17,7 @@ Android Studioのプロジェクト。<br>
 
 
 ## なぜ作ったか
+
 学生は時間割をアプリで管理することが多く、様々な時間割アプリが存在しますが、最初に必ず講義の情報を1つ1つ入力しなければなりません。<br>
 講義のシラバスはWebサイトにすべて公開されているので、時間割とシラバスを結びつけることで簡単な時間割アプリが作れると考えました。<br>
 また、シラバスには講義の区分や単位数なども掲載されているため、単位管理にも使えます。
@@ -48,4 +51,4 @@ Android Studioのプロジェクト。<br>
 課題作成時に、公開設定にすると、データベースに課題が登録されます。<br>
 データベースに登録された課題は、同じ講義を登録しているユーザーにも表示されるようになります。
 
-<img width="601" alt="スクリーンショット 2024-07-08 0 41 38" src="https://github.com/oor30/Timetable/assets/66106684/f5911ba7-6a51-46fb-963a-4d93f425efdb">
+<img width="601" alt="タスク共有デモ" src="https://github.com/oor30/Timetable/assets/66106684/a2b3d22b-09d8-44c0-8c9a-613bdbfbed37">
