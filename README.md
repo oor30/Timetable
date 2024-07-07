@@ -9,8 +9,9 @@ Android Studioのプロジェクト。<br>
 アプリから岐阜大学生ポータルサイトにログインすると、時間割表のHTMLを解析して取得します。
 
 <img width="194" alt="スクリーンショット 2024-07-08 0 13 39" src="https://github.com/oor30/Timetable/assets/66106684/a71fa09e-ae75-43f3-b9f9-fcabdd72e8b3">
+<img width="194" alt="スクリーンショット 2024-07-08 0 54 16" src="https://github.com/oor30/Timetable/assets/66106684/87137d20-c068-43cd-a91b-1e767a784746">
 <img width="194" alt="スクリーンショット 2024-07-08 0 16 18" src="https://github.com/oor30/Timetable/assets/66106684/85d0f167-f282-485f-ba62-8108df033266">
-<img width="197" alt="スクリーンショット 2024-07-08 0 17 16" src="https://github.com/oor30/Timetable/assets/66106684/0507c279-6280-4d53-b6d3-eb9d9925c38d">
+<img width="194" alt="スクリーンショット 2024-07-08 0 17 16" src="https://github.com/oor30/Timetable/assets/66106684/0507c279-6280-4d53-b6d3-eb9d9925c38d">
 
 
 ## なぜ作ったか
